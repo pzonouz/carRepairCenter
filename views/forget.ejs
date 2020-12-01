@@ -1,0 +1,16 @@
+<%- include('./partials/header.ejs') -%> <%- include('./partials/navbar.ejs')
+-%> <%- include('./partials/message.ejs') -%>
+<div class="container" id="login-box">
+  <form class="row-cols-1" action="/forget" method="POST" class="row">
+    <input
+      name="email"
+      dir="ltr"
+      class="form-control col my-2"
+      type="text"
+      placeholder="ایمیل خود را وارد کنید"
+    /> 
+    <div class="col"><a href="/login" class="login-links"> صفحه ورود</a></div>
+    
+    <button type="submit" class="col btn btn-success sign-button">ارسال</button>
+</div>
+<%- include('./partials/footer.ejs') -%>

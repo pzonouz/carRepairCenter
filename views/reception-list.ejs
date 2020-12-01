@@ -1,0 +1,125 @@
+<%- include("./partials/header.ejs") -%> <%-
+include("./partials/navbar-dashboard.ejs") -%> <%-
+include("./partials/sidebar.ejs") -%>
+<div id="main" style="width: 100%; padding-right: 10%">
+  <table
+    id="receptionList"
+    class="table table-striped table-bordered"
+    style="width: 100%"
+  >
+    <thead>
+      <tr>
+        <th>نام مشتری</th>
+        <th>نوع خودرو</th>
+        <th>اظهارات مشتری</th>
+        <th>تاریخ ورود</th>
+        <th>وضعیت</th>
+        <th>عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% receptions.forEach((reception)=>{ %>
+      <tr>
+        <td><%= reception.customerLastname %> <%= reception.customerName %></td>
+        <td><%= reception.vehicleName %></td>
+        <td><%= reception.comments %></td>
+        <td><%= reception.date%> <%= reception.time %></td>
+        <td><%= reception.status %></td>
+        <td style="width: 80%">
+          <button id="editButton" class="btn btn-primary">
+            <a href="/reception/edit/<%= reception.id %>">ویرایش</a>
+          </button>
+          <button id="editButton" class="btn btn-danger">
+            <a href="" data-toggle="modal" data-target="#myModal">حذف</a>
+          </button>
+          <!-- Trigger the modal with a button -->
+          <!-- <button
+            type="button"
+            class="btn btn-info btn-lg"
+            data-toggle="modal"
+            data-target="#myModal"
+          >
+            Open Modal
+          </button> -->
+
+          <!-- Modal -->
+          <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">
+                    &times;
+                  </button>
+                  <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                  <p
+                    style="
+                      margin-right: 0 !important;
+                      margin-left: auto !important;
+                      padding-left: 60%;
+                    "
+                  >
+                    آیا از حذف مطمئن هستید؟
+                  </p>
+                </div>
+                <div class="modal-footer" style="padding-left: 70%">
+                  <form
+                    action="/reception/remove/<%= reception.id %>"
+                    method="POST"
+                    style="display: inline-block"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-danger"
+                      data-dismiss="modal"
+                    >
+                      بله
+                    </button>
+                  </form>
+
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                  >
+                    نه
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button id="editButton" class="btn successButton">تحویل</button>
+          <button id="editButton" class="btn cancelButton">کنسل</button>
+          <button id="editButton" class="btn rejectButton">ناموفق</button>
+          <button id="editButton" class="btn reportButton">گزارش</button>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>نام مشتری</th>
+        <th>نوع خودرو</th>
+        <th>اظهارات مشتری</th>
+        <th>تاریخ ورود</th>
+        <th>وضعیت</th>
+        <th>عملیات</th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+<%- include("./partials/footer.ejs") -%>
+<script>
+  $(document).ready(() => {
+    let searchEelement = document.getElementById("receptionList_filter");
+    let searchLabel = (searchEelement.firstChild.firstChild.data = "جستجو: ");
+    document.getElementById("receptionList_length").firstChild.firstChild.data =
+      " نمایش ";
+    document.getElementById("receptionList_length").lastChild.lastChild.data =
+      "  تایی  ";
+    console.log(receptionList_length);
+  });
+</script>

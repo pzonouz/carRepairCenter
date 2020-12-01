@@ -1,0 +1,21 @@
+<%- include('./partials/header.ejs') -%> <%- include('./partials/navbar.ejs')
+-%> <%- include('./partials/message.ejs') -%>
+<div class="container" id="login-box">
+  <form class="row-cols-1" action="/reset/<%=token%>" method="POST" class="row">
+    <input
+      name="password"
+      dir="ltr"
+      class="form-control col my-2"
+      type="password"
+      placeholder="پسورد خود را وارد نمایید"
+    />
+    <input
+      name="confirmPassword"
+      dir="ltr"
+      class="form-control col my-2"
+      type="password"
+      placeholder="پسورد خود را تایید نمایید"
+    />
+    <button type="submit" class="col btn btn-success sign-button">ذخیره</button>
+</div>
+<%- include('./partials/footer.ejs') -%>

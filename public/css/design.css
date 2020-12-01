@@ -1,0 +1,284 @@
+.nav-link {
+  color: white !important;
+  font-family: Yekan !important;
+  font-size: 1.5rem !important;
+}
+.navbar {
+  position: absolute;
+}
+.navbar-brand {
+  font-family: yekan;
+  font-weight: bold;
+}
+.nav-item {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.nav-link:hover {
+  font-weight: bold;
+  text-decoration: none;
+}
+input {
+  font-family: yekan;
+}
+.sign-button {
+  padding-top: 1%;
+  padding-bottom: 1%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  font-family: yekan !important;
+  font-weight: bold !important;
+  font-size: 1.5rem !important;
+}
+#login-box {
+  position: absolute;
+  display: flexbox;
+  margin-top: 175px;
+  margin-right: 10%;
+  margin-left: auto;
+  width: 70%;
+}
+
+#reception-box {
+  position: absolute;
+  display: flexbox;
+  margin-top: 150px;
+  margin-right: 15%;
+  margin-left: auto;
+  width: 70%;
+}
+
+.message {
+  text-align: right;
+  direction: rtl;
+  padding-left: 20%;
+  position: absolute;
+  display: flexbox;
+  font-family: Yekan;
+  width: max-content;
+  margin-right: 15%;
+  margin-left: auto;
+  margin-top: 80px;
+}
+
+.login-links {
+  text-align: right;
+  display: block;
+  width: 100%;
+  margin-right: 0%;
+  margin-left: auto;
+}
+a {
+  font-family: yekan;
+}
+legend {
+  font-size: medium;
+  text-align: right;
+  width: max-content;
+}
+fieldset {
+  padding: 3%;
+  border: solid rgb(141, 7, 41) 2px;
+  width: 100%;
+  margin-right: 0% !important;
+}
+* {
+  font-family: yekan !important;
+}
+
+.form-check-label {
+  text-align: right;
+  width: 100px;
+  padding-right: 2% !important;
+}
+.form-group {
+  margin-left: 25px !important;
+}
+#editButton {
+  width: 70px;
+  margin: 1px;
+}
+#editButton a:hover {
+  color: white !important;
+}
+#editButton a:active {
+  color: white !important;
+}
+#editButton a:visited {
+  color: white !important;
+}
+#editButton a:focus {
+  color: white !important;
+}
+#editButton a {
+  color: white !important;
+}
+
+#main {
+  padding-top: 15%;
+  padding-left: 10%;
+  /* width: 90%; */
+}
+.reportButton {
+  background-color: #98a198;
+  color: white !important;
+}
+.successButton {
+  background-color: #158311;
+  color: white !important;
+}
+.rejectButton {
+  background-color: #101110;
+  color: white !important;
+}
+.cancelButton {
+  background-color: #111852 !important;
+  color: white !important;
+}
+.modal-footer a:hover{
+  color: white;
+}.modal-footer a:active {
+  color: white;
+}.modal-footer a:focus {
+  color: white;
+}.modal-footer a:visited {
+  color: white;
+}.modal-footer a:link {
+  color: white;
+}
+/*--------------------ShowBox--------------*/
+.redBox {
+  background-color: #ac1010;
+}
+.blackBox {
+  background-color: #101110;
+}
+.greenBox {
+  background-color: #158311;
+}
+.yellowBox {
+  background-color: #b3a101 !important;
+}
+.violetBox {
+  background-color: #111852 !important;
+}
+.blueBox {
+  background-color: #0f67a1 !important;
+}
+.showBox {
+  border-radius: 5px;
+  top: 20%;
+  width: 250px;
+  height: 150px;
+  font-family: yekan;
+  color: white;
+  display: inline-block;
+  /* position: absolute; */
+  left: 10%;
+  right: auto;
+}
+.showBox a {
+  text-decoration: none;
+  display: block;
+}
+.showBox a:hover {
+  color: white !important;
+  /* color: #1023d1; */
+}
+.showBox-Title {
+  position: relative !important;
+  text-align: center;
+  font-size: 35px;
+  font-family: yekan;
+  height: 25%;
+  color: white !important;
+}
+.showBox-Number {
+  position: relative;
+  font-size: 120px;
+  text-align: center;
+  color: white;
+  height: 50%;
+  top: -30px;
+}
+.showBox-openBar {
+  color: white;
+  height: 25%;
+}
+.showBox-openBar svg {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  text-align: right;
+  top: 0%;
+  right: 0%;
+  left: auto;
+}
+/*--------------------SideBar--------------*/
+.openBtn {
+  position: absolute;
+  overflow-x: hidden;
+  right: 0;
+  top: 70px;
+  width: 70px;
+  height: 70px;
+  font-size: 50px;
+  background-color: black;
+  color: white;
+  border: none;
+}
+.sideBar {
+  overflow-x: hidden;
+  position: fixed;
+  z-index: 1;
+  right: 0;
+  height: 75%;
+  top: 140px;
+  /* width: 120px; */
+  width: 0;
+  background-color: black;
+  color: white;
+}
+
+#closeBtn {
+  font-size: 35px;
+  color: #941515;
+  margin-left: 20%;
+  text-decoration: none;
+}
+#closeBtn:hover {
+  color: #941515 !important;
+}
+
+.sideBar a {
+  display: block;
+  text-decoration: none;
+  color: blanchedalmond;
+  margin-left: 10%;
+  padding: 20px 2px 2px 20px;
+  font-size: 25px;
+}
+.sideBar a:hover {
+  text-decoration: none;
+  color: cadetblue !important;
+}
+.sideBar-btn {
+  text-decoration: none;
+  color: blanchedalmond;
+  margin-left: 10%;
+  padding: 20px 2px 2px 20px;
+  font-size: 25px;
+}
+.sideBar-btn:hover {
+  text-decoration: none;
+  color: cadetblue !important;
+}
+.dropdown-menu {
+  background-color: black;
+}
+.dropdown-item {
+  text-align: right;
+}
+#receptionList {
+}

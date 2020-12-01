@@ -1,0 +1,30 @@
+<%- include('./partials/header.ejs') -%> 
+<%- include('./partials/navbar-dashboard.ejs') -%>
+<%- include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
+<div id="main" class="">
+  <div class="showBox blueBox">
+    <a class="showBox-Title"> کل پذیرش ها</a>
+    <a href="/reception/list" class="showBox-Number"><%- totalReceptions -%></a>
+  </div>
+  <div class="showBox yellowBox">
+    <a class="showBox-Title"> در حال انجام</a>
+    <a href="/" class="showBox-Number"><%- doingCount -%></a>
+  </div>
+  <div class="showBox greenBox">
+    <a class="showBox-Title"> تحویل شده </a>
+    <a href="/" class="showBox-Number"><%- succededCount -%></a>
+  </div>
+  <div class="showBox violetBox">
+    <a class="showBox-Title"> کنسل شده</a>
+    <a href="/" class="showBox-Number"><%- canceledCount -%></a>
+  </div>
+  <div class="showBox blackBox">
+    <a class="showBox-Title"> ناموفق</a>
+    <a href="/" class="showBox-Number"><%- rejectedCount -%></a>
+  </div>
+  <div class="showBox redBox">
+    <a class="showBox-Title"> با تاخیر</a>
+    <a href="/" class="showBox-Number"><%- dalayedCount -%></a>
+  </div>
+</div>
+<%- include('./partials/footer.ejs') -%>
