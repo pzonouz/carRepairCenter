@@ -1,14 +1,15 @@
 const express = require("express");
+
 const app = express();
-const router = require("./modules/routes");
-const config = require("./modules/config");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 const session = require("cookie-session");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
-const passport = require("./modules/authenticate");
 const mongoose = require("mongoose");
 const logger = require("morgan");
+const passport = require("./modules/authenticate");
+const config = require("./modules/config");
+const router = require("./modules/routes");
 
 /**---------------------------------------------------------
  * ?Use and Set
@@ -33,7 +34,7 @@ app.use((req, res, next) => {
 });
 app.use(passport.initialize());
 app.use(passport.session());
-//Always use in the end
+// Always use in the end
 app.use(router);
 
 /**---------------------------------------------------------

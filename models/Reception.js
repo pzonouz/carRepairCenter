@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-let status = {
+
+const status = {
   doing: "doing",
   rejected: "rejected",
   canceled: "canceled",
@@ -8,7 +9,7 @@ let status = {
   returened: "returened",
 };
 
-let receptionSchema = new mongoose.Schema({
+const receptionSchema = new mongoose.Schema({
   reception_id: { type: Date, required: true },
   status: { type: String, required: true },
   customerPhoneNumber: { type: String, required: true },
@@ -47,5 +48,5 @@ let receptionSchema = new mongoose.Schema({
   antenna: { type: String, required: false },
   lace: { type: String, required: false },
 });
-let Reception = mongoose.model("Receptions", receptionSchema);
+const Reception = mongoose.model("Receptions", receptionSchema);
 module.exports = Reception;

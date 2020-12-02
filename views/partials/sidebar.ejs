@@ -1,54 +1,54 @@
 <button class="openBtn" id="openBtn" onclick="openSide()">&#x02261;</button>
 <div class="sideBar" id="sideBar">
-  <a id="closeBtn" onclick="closeSide()" href="#"> &Cross;</a>
-  <div class="dropdown">
-    <button
-      class="btn dropdown-toggle sideBar-btn"
-      type="button"
-      id="dropdownMenuButton"
-      data-toggle="dropdown"
-      aria-haspopup="true"
-      aria-expanded="false"
-    >
-      جدید
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="/customer/new">مشتری</a>
-      <a class="dropdown-item" href="/reception/new">پذیرش</a>
-      <a class="dropdown-item" href="/donar/new">یدکی</a>
-    </div>
-  </div>
+    <a id="closeBtn" onclick="closeSide()" href="#"> &Cross;</a>
     <div class="dropdown">
-      <button
-        class="btn dropdown-toggle sideBar-btn"
-        type="button"
-        id="dropdownMenuButton"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-        ویرایش
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">مشتری</a>
-        <a class="dropdown-item" href="#">پذیرش</a>
-        <a class="dropdown-item" href="#">یدکی</a>
-      </div>
+        <button
+            class="btn dropdown-toggle sideBar-btn"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >
+            جدید
+        </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/customer/new">مشتری</a>
+                <a class="dropdown-item" href="/reception/new">پذیرش</a>
+                <a class="dropdown-item" href="/donar/new">یدکی</a>
+            </div>
+    </div>
+    <div class="dropdown">
+        <button
+            class="btn dropdown-toggle sideBar-btn"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >
+            ویرایش
+        </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">مشتری</a>
+                <a class="dropdown-item" href="#">پذیرش</a>
+                <a class="dropdown-item" href="#">یدکی</a>
+            </div>
     </div>
     <a href="">گزارش</a>
     <a href="">تنظیمات</a>
     <a href="">منو</a>
-  </div>
-  <script>
+</div>
+<script>
     openSide = () => {
-      console.log("open");
-      document.getElementById("sideBar").style.width = "150px";
-      document.getElementById("main").style.marginRight = "150px";
-    };
+            console.log("open");
+            document.getElementById("sideBar").style.width = "150px";
+            document.getElementById("main").style.marginRight = "150px";
+        };
 
-    closeSide = () => {
-      document.getElementById("sideBar").style.width = "0";
-      document.getElementById("main").style.marginRight = "0";
-    };
-  </script>
+        closeSide = () => {
+                document.getElementById("sideBar").style.width = "0";
+                document.getElementById("main").style.marginRight = "0";
+            };
+</script>
 </div>

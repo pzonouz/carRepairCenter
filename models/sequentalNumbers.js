@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-let sequentalNumbers = new mongoose.Schema({
+
+const sequentalNumbers = new mongoose.Schema({
   seqNumber: { type: String, required: true },
-//   firstTime: { type: Boolean, required: true },
+  //   firstTime: { type: Boolean, required: true },
 });
-let sequentalNumber = mongoose.model("sequentalNumber", sequentalNumbers);
+const sequentalNumber = mongoose.model("sequentalNumber", sequentalNumbers);
 module.exports = sequentalNumber;
