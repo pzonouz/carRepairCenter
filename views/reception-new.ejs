@@ -3,7 +3,7 @@ include('./partials/navbar-dashboard.ejs') -%> <%-
 include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 <div id="main" class="">
     <div class="container" id="reception-box" style="top:0% !important">
-        <form autocomplete="off" class="row" action="/reception/new" method="POST">
+        <form  id="mainForm" autocomplete="off" class="row" action="/reception/new" method="POST">
             <fieldset class="row">
                 <legend>مشتری</legend>
                 <input
@@ -13,6 +13,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 class="form-control col my-2 mx-2"
                 type="text"
                 placeholder="نام مشتری را وارد نمایید"
+                onfocusout="validatePhoneNumber(this)"
                 required
                 />
                 <datalist id="customerList"> </datalist>
@@ -340,7 +341,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                         </div>
             </fieldset>
 
-            <button type="submit" id="submit" class="col btn btn-success sign-button">
+            <button type="submit" id="submitBtn" class="col btn btn-success sign-button">
                 ثبت
             </button>
         </form>
@@ -365,7 +366,6 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                                                         }
                                                 }
                                             if (!duplicated) {
-                                                    console.log(result["phoneNumber"]);
                                                     let tag =
                                                         '<option value="' +
                                                         result["phoneNumber"] +
@@ -396,9 +396,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 
         //validation
 
+        let button = document.getElementById("submitBtn");
         validate = (e) => {
                 console.log("keyup");
-                let button = document.getElementById("submit");
                 let regex = /[^0-9,]/g;
                 let farsiRegex = /[۱۲۳۴۵۶۷۸۹]/g;
                 if (farsiRegex.test(e.value)) {
@@ -423,5 +423,21 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 button.disabled = false;
                 button.classList.add("btn-success");
                 button.classList.remove("btn-danger");
-            };
+            };  
+        document.onkeydown=function(e){
+                console.log("Keydown")
+                if((event.keyCode||event.which)==115){
+                        document.getElementById("mainForm").submit()
+
+                    }
+            }
+        function validatePhoneNumber(e){
+                let phoneNumber=e.value;    
+                let phoneNumberValidator=/[0123456789]{11}/g
+                if(!phoneNumberValidator.test(phoneNumber)){
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
+            }
 </script>

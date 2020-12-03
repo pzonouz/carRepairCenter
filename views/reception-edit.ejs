@@ -3,7 +3,7 @@ include('./partials/navbar-dashboard.ejs') -%> <%-
 include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 <div id="main" class="">
     <div class="container" id="reception-box" style="top: 0% !important">
-        <form autocomplete="off" class="row" action="/reception/edit/<%= reception.id %> " method="POST">
+        <form id="mainForm" autocomplete="off" class="row" action="/reception/edit/<%= reception.id %> " method="POST">
             <fieldset class="row">
                 <legend>مشتری</legend>
                 <input
@@ -366,7 +366,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                         </div>
             </fieldset>
 
-            <button type="submit" id="submit" class="col btn btn-success sign-button">
+            <button type="submit" id="submitBtn" class="col btn btn-success sign-button">
                 ثبت
             </button>
         </form>
@@ -424,7 +424,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 
         validate = (e) => {
                 console.log("keyup");
-                let button = document.getElementById("submit");
+                let button = document.getElementById("submitBtn");
                 let regex = /[^0-9,]/g;
                 let farsiRegex = /[۱۲۳۴۵۶۷۸۹]/g;
                 if (farsiRegex.test(e.value)) {
@@ -450,4 +450,12 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 button.classList.add("btn-success");
                 button.classList.remove("btn-danger");
             };
+        document.onkeydown=function(e){
+                console.log("Keydown")
+                if((event.keyCode||event.which)==115){
+                        document.getElementById("mainForm").submit()
+
+                    }
+            }
+
 </script>

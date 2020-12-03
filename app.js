@@ -2,6 +2,7 @@ const express = require("express");
 
 const app = express();
 // const cookieParser = require("cookie-parser");
+// const debug = require("debug");
 const session = require("cookie-session");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
@@ -36,7 +37,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 // Always use in the end
 app.use(router);
-
 /**---------------------------------------------------------
  * ?Connect Database
  */

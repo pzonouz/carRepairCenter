@@ -20,7 +20,7 @@ const status = {
   canceled: "canceled",
   dalayed: "dalayed",
   succeded: "succeded",
-  returened: "returened",
+  returned: "returned",
 };
 
 /**---------------------------------------------------------
@@ -32,13 +32,13 @@ const isAuthenticated = (req, res, next) => {
     return next();
   }
   req.flash("error", "شما مجاز نیستید");
-  res.redirect("/login");
+  return res.redirect("/login");
 };
 const isSaved = (req, res, next) => {
   if (req.isAuthenticated()) {
     return res.redirect("/dashboard");
   }
-  next();
+  return next();
 };
 
 const isToday = (d) => {
@@ -56,13 +56,14 @@ const translateStatustoFarsi = (status) => {
   if (status === "canceled") return "کنسلی";
   if (status === "dalayed") return "با تاخیر";
   if (status === "succeded") return "تحویل شده";
-  if (status === "returened") return "برگشتی";
+  if (status === "returned") return "برگشتی";
 };
 /**---------------------------------------------------------
  * ?Routes
  * !GETs
  */
 router.get("/", (_req, res) => {
+  // debugger;
   res.render("index");
 });
 router.get("/dashboard", isAuthenticated, async (req, res) => {
@@ -70,20 +71,20 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
   let todayTotalReceptions = 0;
   let doingCount = 0;
   let rejectedCount = 0;
-  let returenedCount = 0;
-  let returenedTodayCount = 0;
+  let returnedCount = 0;
+  let returnedTodayCount = 0;
   let canceledCount = 0;
-  let dalayedCount = 0;
+  const delayedCount = 0;
   let succededCount = 0;
   await Reception.find({}).then((receptions) => {
     totalReceptions = receptions.length;
 
     // loop all receptions
-    for (reception of receptions) {
+    for (const reception of receptions) {
       // check dates(reception_id)
       if (isToday(reception.reception_id)) {
         todayTotalReceptions++;
-        returenedTodayCount++;
+        returnedTodayCount++;
       }
       // check Status
       if (reception.status === "doing") {
@@ -101,8 +102,8 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
       if (reception.status === "succeded") {
         succededCount++;
       }
-      if (reception.status === "returened") {
-        returenedCount++;
+      if (reception.status === "returned") {
+        returnedCount++;
       }
     }
   });
@@ -113,9 +114,9 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
     doingCount,
     rejectedCount,
     canceledCount,
-    dalayedCount,
+    delayedCount,
     succededCount,
-    returenedCount,
+    returnedCount,
   });
 });
 router.get("/login", isSaved, (_req, res) => {
@@ -140,7 +141,7 @@ router.get("/reset/:token", (req, res) => {
         req.flash("error", "توکن صحیح نیست یا تاریخ مصرف گذشته است");
         return res.redirect("/forget");
       }
-      res.render("reset", { token });
+      return res.render("reset", { token });
     })
     .catch((err) => {
       req.flash("error", serializeError(err).message);
@@ -178,7 +179,7 @@ router.get("/reception/list", isAuthenticated, async (req, res) => {
       const date = new Date(reception.reception_id);
       const dateTime = new Intl.DateTimeFormat("en-US").format(date);
       // get jalali data (https://www.npmjs.com/package/jalali-moment)
-      m = moment.from(dateTime, "en", "MM/DD/YYYY");
+      const m = moment.from(dateTime, "en", "MM/DD/YYYY");
       const jDate = m.format("jYYYY/jMM/jDD");
       // makeing 2 digit hour and minute
       const time = `${(date.getHours() < 10 ? "0" : "") + date.getHours()}:${
@@ -476,7 +477,7 @@ router.post("/reception/new", isAuthenticated, async (req, res) => {
   };
 
   await Reception.create(formData)
-    .then((reception) => {
+    .then(() => {
       req.flash("success", "پذیرش با موفقیت انجام شد");
       return res.redirect("/reception/new");
     })
@@ -531,7 +532,7 @@ router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
   mileage = mileage.replace(/,/g, "");
   const date = new Date();
   // let modificationDate = date.now();
-  // req.body data but to checkboxs
+  // req.body data but eo checkboxs
   const formData = {
     // reception_id: date.toISOString(),
     status: status.doing,
@@ -592,6 +593,16 @@ router.post("/ajax", isAuthenticated, (_req, res) => {
     })
     .catch();
 });
-router.post("/reception/remove/:id", (req, res) => {});
+router.post("/reception/remove/:id", (req, res) => {
+  Reception.findOneAndDelete({ _id: req.params.id })
+    .then(() => {
+      req.flash("success", "با موفقیت حذف گردید");
+      return res.redirect("/reception/list");
+    })
+    .catch((err) => {
+      req.flash("error", serializeError(err).message);
+      return res.redirect("/reception/list");
+    });
+});
 
 module.exports = router;

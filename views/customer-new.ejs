@@ -5,26 +5,26 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
   <div class="container" id="login-box">
     <form class="row-cols-1" action="/customer/new" method="POST" class="row">
       <input
-        dir="ltr"
-        name="name"
-        class="form-control col my-2"
-        type="text"
-        placeholder="نام مشتری را وارد نمایید"
+      dir="ltr"
+      name="name"
+      class="form-control col my-2"
+      type="text"
+      placeholder="نام مشتری را وارد نمایید"
       />
       <input
-        dir="ltr"
-        name="lastName"
-        class="form-control col my-2"
-        type="text"
-        placeholder="نام خانوادگی مشتری را وارد نمایید"
+      dir="ltr"
+      name="lastName"
+      class="form-control col my-2"
+      type="text"
+      placeholder="نام خانوادگی مشتری را وارد نمایید"
       />
       <input
-        dir="ltr"
-        name="phoneNumber"
-        class="form-control col my-2"
-        type="text"
-        onkeyup="javascript:validate(this)"
-        placeholder="شماره موبایل وارد نمایید"
+      dir="ltr"
+      name="phoneNumber"
+      class="form-control" "col my-2"
+      type="number"
+      onkeyup="javascript:validate(this)"
+      placeholder="شماره موبایل وارد نمایید"
       />
       <button type="submit" id="submit" class="col btn btn-success sign-button">
         ثبت
@@ -35,27 +35,27 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 <%- include('./partials/footer.ejs') -%>
 <script>
   let validate = (e) => {
-    console.log("keyUp");
-    let pattern = /[۱۲۳۴۵۶۷۸۹]|[^0-9]/g;
-    let button = document.getElementById("submit");
-    console.log(e.value);
-    if (pattern.test(e.value)) {
-      console.log("error");
-      doError(e, button);
-    } else {
-      undoError(e, button);
-    }
-  };
-  let doError = (e, button) => {
-    e.classList.add("text-danger");
-    button.classList.remove("btn-success");
-    button.classList.add("btn-danger");
-    button.disabled = true;
-  };
-  let undoError = (e, button) => {
-    e.classList.remove("text-danger");
-    button.disabled = false;
-    button.classList.add("btn-success");
-    button.classList.remove("btn-danger");
-  };
+      console.log("keyUp");
+      let pattern = /[۱۲۳۴۵۶۷۸۹]|[^0-9]/g;
+      let button = document.getElementById("submit");
+      console.log(e.value);
+      if (pattern.test(e.value)) {
+          console.log("error");
+          doError(e, button);
+        } else {
+            undoError(e, button);
+          }
+    };
+    let doError = (e, button) => {
+        e.classList.add("text-danger");
+        button.classList.remove("btn-success");
+        button.classList.add("btn-danger");
+        button.disabled = true;
+      };
+    let undoError = (e, button) => {
+        e.classList.remove("text-danger");
+        button.disabled = false;
+        button.classList.add("btn-success");
+        button.classList.remove("btn-danger");
+      };
 </script>

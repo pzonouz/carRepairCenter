@@ -1,6 +1,6 @@
 <%- include("./partials/header.ejs") -%> <%-
-include("./partials/navbar-dashboard.ejs") -%> <%-
-include("./partials/sidebar.ejs") -%>
+include("./partials/navbar-dashboard.ejs") -%> <%- include('./partials/message.ejs') -%>
+<%- include("./partials/sidebar.ejs") -%>
 <div id="main" style="width: 100%; padding-right: 10%">
     <table
         id="receptionList"
@@ -65,13 +65,13 @@ include("./partials/sidebar.ejs") -%>
                                         </p>
                                     </div>
                                     <div class="modal-footer" style="padding-left: 70%">
-                                        <form
+                                        <form id="mainForm"
                                             action="/reception/remove/<%= reception.id %>"
                                             method="POST"
                                             style="display: inline-block"
                                             >
                                             <button
-                                                type="submit"
+                                                onclick="doSubmit()" type="submit"
                                                 class="btn btn-danger"
                                                 data-dismiss="modal"
                                                 >
@@ -113,13 +113,17 @@ include("./partials/sidebar.ejs") -%>
 </div>
 <%- include("./partials/footer.ejs") -%>
 <script>
-    $(document).ready(() => {
-            let searchEelement = document.getElementById("receptionList_filter");
-            let searchLabel = (searchEelement.firstChild.firstChild.data = "جستجو: ");
-            document.getElementById("receptionList_length").firstChild.firstChild.data =
-                " نمایش ";
-            document.getElementById("receptionList_length").lastChild.lastChild.data =
-                "  تایی  ";
-            console.log(receptionList_length);
-        });
+    function doSubmit(){
+            console.log("click")
+            document.getElementById("mainForm").submit();
+        };
+        $(document).ready(() => {
+                let searchEelement = document.getElementById("receptionList_filter");
+                let searchLabel = (searchEelement.firstChild.firstChild.data = "جستجو: ");
+                document.getElementById("receptionList_length").firstChild.firstChild.data =
+                    " نمایش ";
+                document.getElementById("receptionList_length").lastChild.lastChild.data =
+                    " تایید  ";
+                console.log(receptionList_length);
+            });
 </script>
