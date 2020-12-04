@@ -1,275 +1,302 @@
 <%- include('./partials/header.ejs') -%> <%-
 include('./partials/navbar-dashboard.ejs') -%> <%-
 include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
+<style>
+input[type="text"],input[type="checkbox"]{
+    pointer-events: none;
+}
+#finalPayment,#successComment{
+    pointer-events: all; 
+}                                                   
+</style>
 <div id="main" class="">
-    <div class="container" id="reception-box" style="top:0% !important">
-        <form  id="mainForm" autocomplete="off" class="row" action="/reception/new" method="POST">
+    <div class="container" id="reception-box" style="top: 0% !important">
+        <form id="mainForm" autocomplete="off" class="row" action="/reception/success/<%= reception.id %> " method="POST">
             <fieldset class="row">
                 <legend>مشتری</legend>
-                <input
+                <input 
                 id="customer"
                 list="customerList"
                 name="customerPhoneNumber"
                 class="form-control col my-2 mx-2"
                 type="text"
                 placeholder="نام مشتری را وارد نمایید"
+
                 onfocusout="validatePhoneNumber(this)"
-                required
+                value=<%= reception.customerPhoneNumber %> 
                 />
                 <datalist id="customerList"> </datalist>
                 <!-- <a href="/customer/new">اضافه کردن مشتری</a> -->
 
-                <input
+                <input 
                 name="comments"
                 class="form-control col my-2 mx-2"
                 type="text"
                 placeholder="اظهارات مشتری را وارد نمایید"
-                required
+
+                value="<%= reception.comments %>"
+
                 />
             </fieldset>
 
             <fieldset class="row">
                 <legend>خودرو</legend>
-                <input
+                <input 
                 name="vehicleName"
                 class="form-control col my-2 mx-2"
                 type="text"
                 placeholder="نام خودرو را وارد نمایید"
-                required
+
+                value="<%= reception.vehicleName %>"
                 />
-                <input
+                <input 
                 name="license"
                 class="form-control col my-2 mx-2"
                 type="text"
                 placeholder="پلاک را وارد نمایید"
-                required
-                />
-                <input
+
+                value="<%= reception.license %>"        />
+                <input 
                 name="VIN"
                 class="form-control col my-2 mx-2"
                 type="text"
                 placeholder="شماره شاسی را وارد نمایید"
-                required
+
+                value="<%= reception.VIN %>"
                 />
-                <input
+                <input 
                 name="mileage"
                 class="form-control col my-2 mx-2"
                 type="text"
-                onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+                onkeyup="javascript:this.value=seprate(this.value);javascript:validate(this)"
                 placeholder="کیلومتر فعلی را وارد نمایید"
-                lang="En"
-                required
+
+                value=<%= reception.mileage %>
                 />
-                <input
+                <input 
                 name="situation"
                 class="form-control col my-2 mx-2"
                 type="text"
                 placeholder="وضعیت ظاهری را وارد نمایید"
-                required
+
+                value="<%= reception.situation %>"
                 />
-                <input
+                <input 
                 name="pricePrediction"
                 class="form-control col my-2 mx-2"
                 type="text"
-                onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+                onkeyup="javascript:this.value=seprate(this.value);javascript:validate(this)"
                 placeholder="هزینه تقریبی را وارد نمایید"
-                required
+
+                value=<%= reception.pricePrediction %>
                 />
-                <input
+                <input 
                 name="prePaid"
                 class="form-control col my-2 mx-2"
                 type="text"
-                onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+                onkeyup="javascript:this.value=seprate(this.value);javascript:validate(this)"
                 placeholder="مبلغ بیعانه را وارد نمایید"
-                required
+
+                value=<%= reception.prePaid %>
                 />
-                <input
+                <input 
                 name="things"
                 class="form-control col my-2 mx-2"
                 type="text"
                 placeholder="لوازم همراه را وارد نمایید"
-                required
+
+                value="<%= reception.things %>"
                 />
             </fieldset>
             <fieldset class="row">
                 <legend>لوازم</legend>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="spare"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
-                    name="spare"
+                    <%= (reception.spare)?'checked':undefined %>             
+                    name="spare"            
                     />
                     <label for="spare" class="form-check-label">زاپاس</label>
                 </div>
 
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="jack"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.jack)?'checked':undefined %> 
                     name="jack"
                     />
                     <label for="jack" class="form-check-label">جک</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="toolBox"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.toolBox)?'checked':undefined %> 
                     name="toolBox"
                     />
                     <label for="toolBox" class="form-check-label">جعبه ابزار</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="light"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.light)?'checked':undefined %> 
                     name="light"
                     />
                     <label for="light" class="form-check-label">فندک</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="audioPlayer"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.audioPlayer)?'checked':undefined %> 
                     name="audioPlayer"
                     />
                     <label for="audioPlayer" class="form-check-label"> پخش</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="sunroofTool"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.sunroofTool)?'checked':undefined %> 
                     name="sunroofTool"
                     />
                     <label for="sunroofTool" class="form-check-label">آچار سانروف</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="manual"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.manual)?'checked':undefined %> 
                     name="manual"
                     />
                     <label for="manual" class="form-check-label">دفترچه</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="sideMirror"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.sideMirror)?'checked':undefined %> 
                     name="sideMirror"
                     />
                     <label for="sideMirror" class="form-check-label">آینه بغل</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="footStool"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.footStool)?'checked':undefined %> 
                     name="footStool"
                     />
                     <label for="footStool" class="form-check-label">زیرپایی</label>
-                </div>
+                </div>       
                 <div class="form-check form-check-inline">
-                    <input
-                    id="spare"
-                    class="form-check-input"
-                    type="checkbox"
-                    name="spare"
-                    />
-                    <label for="spare" class="form-check-label">متعلقات موبایل</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="dangerTriangle"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.dangerTriangle)?'checked':undefined %> 
                     name="dangerTriangle"
                     />
                     <label for="dangerTriangle" class="form-check-label">مثلث خطر</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="logo"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.logo)?'checked':undefined %> 
                     name="logo"
                     />
                     <label for="logo" class="form-check-label">آرم جلو پنجره </label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="cable"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.cable)?'checked':undefined %> 
                     name="cable"
                     />
                     <label for="cable" class="form-check-label">کابل USB</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="remote"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.remote)?'checked':undefined %> 
                     name="remote"
                     />
                     <label for="remote" class="form-check-label">ریموت</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="hubcap"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.hubcap)?'checked':undefined %> 
                     name="hubcap"
                     />
                     <label for="hubcap" class="form-check-label">قالپاق</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="sportRing"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.sportRing)?'checked':undefined %> 
                     name="sportRing"
                     />
                     <label for="sportRing" class="form-check-label">رینگ اسپورت</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="traffic"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.traffic)?'checked':undefined %> 
                     name="traffic"
                     />
                     <label for="traffic" class="form-check-label">آرم طرح ترافیک</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="siren"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.siren)?'checked':undefined %> 
                     name="siren"
                     />
                     <label for="siren" class="form-check-label">دزدگیر</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="ashTray"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.ashTray)?'checked':undefined %> 
                     name="ashTray"
                     />
                     <label for="ashTray" class="form-check-label">زیرسیگاری</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input
+                    <input 
                     id="fireExtinguisher"
-                    class="form-check-input"
+                    class="form-check-input "
                     type="checkbox"
+                    <%= (reception.fireExtinguisher)?'checked':undefined %> 
                     name="fireExtinguisher"
                     />
                     <label for="fireExtinguisher" class="form-check-label"
@@ -277,70 +304,96 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     >
                 </div>
                         <div class="form-check form-check-inline">
-                            <input
+                            <input 
                             id="rearWiper"
-                            class="form-check-input"
+                            class="form-check-input "
                             type="checkbox"
+                            <%= (reception.rearWiper)?'checked':undefined %> 
                             name="rearWiper"
                             />
                             <label for="rearWiper" class="form-check-label">برف پاکن عقب</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input
+                            <input 
                             id="seatCover"
-                            class="form-check-input"
+                            class="form-check-input "
                             type="checkbox"
+                            <%= (reception.seatCover)?'checked':undefined %> 
                             name="seatCover"
                             />
                             <label for="seatCover" class="form-check-label">روکش صندلی</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input
+                            <input 
                             id="wheelWrench"
-                            class="form-check-input"
+                            class="form-check-input "
                             type="checkbox"
+                            <%= (reception.wheelWrench)?'checked':undefined %> 
                             name="wheelWrench"
                             />
                             <label for="wheelWrench" class="form-check-label">آچار چرخ</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input
+                            <input 
                             id="frontWiper"
-                            class="form-check-input"
+                            class="form-check-input "
                             type="checkbox"
+                            <%= (reception.frontWiper)?'checked':undefined %> 
                             name="frontWiper"
                             />
                             <label for="frontWiper" class="form-check-label">برف پاکن جلو</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input
+                            <input 
                             id="ringLock"
-                            class="form-check-input"
+                            class="form-check-input "
                             type="checkbox"
+                            <%= (reception.ringLock)?'checked':undefined %> 
                             name="ringLock"
                             />
                             <label for="ringLock" class="form-check-label">قفل رینگ</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input
+                            <input 
                             id="antenna"
-                            class="form-check-input"
+                            class="form-check-input "
                             type="checkbox"
+                            <%= (reception.antenna)?'checked':undefined %> 
                             name="antenna"
                             />
                             <label for="antenna" class="form-check-label">آنتن</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input
+                            <input 
                             id="lace"
-                            class="form-check-input"
+                            class="form-check-input "
                             type="checkbox"
+                            <%= (reception.lace)?'checked':undefined %> 
                             name="lace"
                             />
                             <label for="lace" class="form-check-label">توری</label>
                         </div>
             </fieldset>
 
+            <fieldset class="row row-cols-1">
+                <legend>تحویل</legend>
+                <input 
+                id="successComment"
+                name="successComment"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="توضیحات"
+                />
+
+                <input 
+                id="finalPayment"
+                name="finalPayment"
+                class="form-control col my-2 mx-2"
+                onkeyup="javascript:this.value=seprate(this.value);javascript:validate(this)"
+                type="text"
+                placeholder="پرداخت نهایی را وارد نمایید"
+                />
+            </fieldset>
             <button type="submit" id="submitBtn" class="col btn btn-success sign-button">
                 ثبت
             </button>
@@ -366,6 +419,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                                                         }
                                                 }
                                             if (!duplicated) {
+                                                    console.log(result["phoneNumber"]);
                                                     let tag =
                                                         '<option value="' +
                                                         result["phoneNumber"] +
@@ -383,7 +437,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
         });
 
         //seprator
-        function separate(Number) {
+        function seprate(Number) {
                 Number += "";
                 Number = Number.replace(",", "");
                 x = Number.split(".");
@@ -395,7 +449,6 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
             }
 
         //validation
-
         let button = document.getElementById("submitBtn");
         validate = (e) => {
                 let regex = /[^0-9,]/g;
@@ -422,7 +475,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 button.disabled = false;
                 button.classList.add("btn-success");
                 button.classList.remove("btn-danger");
-            };  
+            };
         document.onkeydown=function(e){
                 if((event.keyCode||event.which)==115){
                         document.getElementById("mainForm").submit()
@@ -430,6 +483,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     }
             }
         function validatePhoneNumber(e){
+                console.log(e.value)
                 let phoneNumber=e.value;    
                 let phoneNumberValidator=/[0123456789]{11}/g
                 if(!phoneNumberValidator.test(phoneNumber)){
@@ -438,4 +492,5 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             undoError(e, button);
                         }
             }
+
 </script>

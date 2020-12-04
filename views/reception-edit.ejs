@@ -14,6 +14,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 type="text"
                 placeholder="نام مشتری را وارد نمایید"
                 required
+                onfocusout="validatePhoneNumber(this)"
                 value=<%= reception.customerPhoneNumber %> 
                 />
                 <datalist id="customerList"> </datalist>
@@ -421,10 +422,8 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
             }
 
         //validation
-
-        validate = (e) => {
-                console.log("keyup");
                 let button = document.getElementById("submitBtn");
+        validate = (e) => {
                 let regex = /[^0-9,]/g;
                 let farsiRegex = /[۱۲۳۴۵۶۷۸۹]/g;
                 if (farsiRegex.test(e.value)) {
@@ -451,11 +450,19 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 button.classList.remove("btn-danger");
             };
         document.onkeydown=function(e){
-                console.log("Keydown")
                 if((event.keyCode||event.which)==115){
                         document.getElementById("mainForm").submit()
 
                     }
+            }
+        function validatePhoneNumber(e){
+                let phoneNumber=e.value;    
+                let phoneNumberValidator=/[0123456789]{11}/g
+                if(!phoneNumberValidator.test(phoneNumber)){
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
             }
 
 </script>

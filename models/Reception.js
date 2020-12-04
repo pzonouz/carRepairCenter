@@ -47,6 +47,12 @@ const receptionSchema = new mongoose.Schema({
   ringLock: { type: String, required: false },
   antenna: { type: String, required: false },
   lace: { type: String, required: false },
+  finalPayment: { type: Number },
+  successComment: { type: String },
+  cancelPayment: { type: Number },
+  cancelComment: { type: String },
+  rejectPayment: { type: Number },
+  rejectComment: { type: String },
 });
 const Reception = mongoose.model("Receptions", receptionSchema);
 module.exports = Reception;

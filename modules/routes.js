@@ -14,7 +14,8 @@ const User = require("../models/User");
 /**---------------------------------------------------------
  * !Global Variables
  */
-const status = {
+// status of receptions
+const Status = {
   doing: "doing",
   rejected: "rejected",
   canceled: "canceled",
@@ -34,6 +35,7 @@ const isAuthenticated = (req, res, next) => {
   req.flash("error", "شما مجاز نیستید");
   return res.redirect("/login");
 };
+// check if user logged before
 const isSaved = (req, res, next) => {
   if (req.isAuthenticated()) {
     return res.redirect("/dashboard");
@@ -50,6 +52,7 @@ const isToday = (d) => {
     today.getFullYear === date.getFullYear
   );
 };
+
 const translateStatustoFarsi = (status) => {
   if (status === "doing") return "در حال انجام";
   if (status === "rejected") return "نا موفق";
@@ -202,7 +205,7 @@ router.get("/reception/list", isAuthenticated, async (req, res) => {
   );
   res.render("reception-list", { name: req.user.name, receptions });
 });
-router.get("/reception/edit/:id", (req, res) => {
+router.get("/reception/edit/:id", isAuthenticated, (req, res) => {
   Reception.findOne({ _id: req.params.id })
     .then((reception) => {
       return res.render("reception-edit", {
@@ -212,6 +215,41 @@ router.get("/reception/edit/:id", (req, res) => {
     })
     .catch((err) => {
       console.log("Error from Reception findOne:", err);
+      req.flash("error", deserializeError(err).message);
+      return res.redirect("/reception/list");
+    });
+});
+router.get("/reception/success/:id", isAuthenticated, (req, res) => {
+  Reception.findOne({ _id: req.params.id })
+    .then((reception) => {
+      return res.render("reception-success", {
+        name: req.body.name,
+        reception,
+      });
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
+      return res.redirect("/reception/success");
+    });
+});
+router.get("/reception/cancel/:id", isAuthenticated, (req, res) => {
+  Reception.findOne({ _id: req.params.id }).then((reception) => {
+    return res.render("reception-cancel", { name: req.body.name, reception });
+  });
+});
+router.get("/reception/reject/:id", isAuthenticated, (req, res) => {
+  Reception.findOne({ _id: req.params.id })
+    .then((reception) => {
+      if (reception) {
+        return res.render("reception-reject", {
+          name: req.body.name,
+          reception,
+        });
+      }
+      req.flash("error", "پذیرش یافت نشد");
+      return res.redirect("/reception/list");
+    })
+    .catch((err) => {
       req.flash("error", deserializeError(err).message);
       return res.redirect("/reception/list");
     });
@@ -232,11 +270,11 @@ router.post("/register", (req, res) => {
   )
     .then(() => {
       req.flash("success", "ثبت نام انجام شد");
-      res.redirect("/login");
+      return res.redirect("/login");
     })
     .catch((err) => {
       req.flash("error", serializeError(err).message);
-      res.redirect("/register");
+      return res.redirect("/register");
     });
 });
 router.post(
@@ -437,7 +475,7 @@ router.post("/reception/new", isAuthenticated, async (req, res) => {
   const date = new Date();
   const formData = {
     reception_id: date.toISOString(),
-    status: status.doing,
+    status: Status.doing,
     customerPhoneNumber,
     comments,
     vehicleName,
@@ -535,7 +573,7 @@ router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
   // req.body data but eo checkboxs
   const formData = {
     // reception_id: date.toISOString(),
-    status: status.doing,
+    status: Status.doing,
     customerPhoneNumber,
     comments,
     vehicleName,
@@ -586,13 +624,6 @@ router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
       return res.redirect(`/reception/edit/${req.params.id}`);
     });
 });
-router.post("/ajax", isAuthenticated, (_req, res) => {
-  Customer.find({})
-    .then((customers) => {
-      res.send(customers);
-    })
-    .catch();
-});
 router.post("/reception/remove/:id", (req, res) => {
   Reception.findOneAndDelete({ _id: req.params.id })
     .then(() => {
@@ -601,6 +632,65 @@ router.post("/reception/remove/:id", (req, res) => {
     })
     .catch((err) => {
       req.flash("error", serializeError(err).message);
+      return res.redirect("/reception/list");
+    });
+});
+router.post("/reception/success/:id", (req, res) => {
+  const finalPayment = req.body.finalPayment.replace(/,/g, "");
+  successComment = req.body.successComment;
+  const status = Status.succeded;
+  Reception.findOneAndUpdate(
+    { _id: req.params.id },
+    { status, successComment, finalPayment }
+  )
+    .then(() => {
+      req.flash("success", "با موفقیت انجام شد");
+      return res.redirect("/reception/list");
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
+      return res.redirect("/reception/list");
+    });
+});
+router.post("/reception/cancel/:id", (req, res) => {
+  const cancelPayment = req.body.cancelPayment.replace(/,/g, "");
+  const { cancelComment } = req.body;
+  const status = Status.canceled;
+  Reception.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      status,
+      cancelPayment,
+      cancelComment,
+    }
+  )
+    .then(() => {
+      req.flash("success", "با موفقیت انجام شد");
+      return res.redirect("/reception/list");
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
+      return res.redirect("/reception/list");
+    });
+});
+router.post("/reception/reject/:id", isAuthenticated, (req, res) => {
+  const rejectPayment = req.body.rejectPayment.replace(/,/g, "");
+  const { rejectComment } = req.body;
+  const status = Status.rejected;
+  Reception.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      status,
+      rejectPayment,
+      rejectComment,
+    }
+  )
+    .then(() => {
+      req.flash("success", "با موفقیت انجام شد");
+      return res.redirect("/reception/list");
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
       return res.redirect("/reception/list");
     });
 });

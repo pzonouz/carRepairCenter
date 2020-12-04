@@ -3,13 +3,21 @@ const express = require("express");
 const app = express();
 // const cookieParser = require("cookie-parser");
 // const debug = require("debug");
+// Passport js default session is session but I want to remember after broswer exit.
 const session = require("cookie-session");
+// for parsing body in post requests.
 const bodyParser = require("body-parser");
+// flash messages as success or error
 const flash = require("connect-flash");
+// mongodb ORM
 const mongoose = require("mongoose");
+// log in terminal throught node running
 const logger = require("morgan");
+// authentication tool
 const passport = require("./modules/authenticate");
+// I put some config data in there
 const config = require("./modules/config");
+// routing module
 const router = require("./modules/routes");
 
 /**---------------------------------------------------------
