@@ -2,8 +2,8 @@
 include('./partials/navbar-dashboard.ejs') -%> <%-
 include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 <div id="main">
-  <div class="container" id="login-box">
-    <form class="row-cols-1" action="/customer/new" method="POST" class="row">
+  <div class="container" id="login-box" style="top: 0% !important;">
+    <form id="mainForm" class="row-cols-1" action="/customer/new" method="POST" class="row">
       <input
       dir="ltr"
       name="name"
@@ -22,11 +22,12 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
       dir="ltr"
       name="phoneNumber"
       class="form-control" "col my-2"
-      type="number"
-      onkeyup="javascript:validate(this)"
+      type="text"
+      
+      onkeyup="javascript:validate(this);javascript:validatePhoneNumber(this)"
       placeholder="شماره موبایل وارد نمایید"
       />
-      <button type="submit" id="submit" class="col btn btn-success sign-button">
+      <button type="submit" id="submitBtn" class="col btn btn-success sign-button">
         ثبت
       </button>
     </form>
@@ -34,11 +35,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 </div>
 <%- include('./partials/footer.ejs') -%>
 <script>
+      let button = document.getElementById("submitBtn");
   let validate = (e) => {
-      console.log("keyUp");
       let pattern = /[۱۲۳۴۵۶۷۸۹]|[^0-9]/g;
-      let button = document.getElementById("submit");
-      console.log(e.value);
       if (pattern.test(e.value)) {
           console.log("error");
           doError(e, button);
@@ -58,4 +57,18 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
         button.classList.add("btn-success");
         button.classList.remove("btn-danger");
       };
+        document.onkeydown=function(e){
+                if((event.keyCode||event.which)==115){
+                        document.getElementById("mainForm").submit()
+                    }
+            }
+        function validatePhoneNumber(e){
+                let phoneNumber=e.value;    
+                let phoneNumberValidator=/^([0123456789]{11})$/g
+                if(!phoneNumberValidator.test(phoneNumber)){
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
+            }
 </script>

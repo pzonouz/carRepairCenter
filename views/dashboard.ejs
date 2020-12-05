@@ -8,23 +8,23 @@
     </div>
     <div class="showBox yellowBox">
         <a class="showBox-Title"> در حال انجام</a>
-        <a href="/" class="showBox-Number"><%- doingCount -%></a>
+        <a href="/doing/list" class="showBox-Number"><%- doingCount -%></a>
     </div>
     <div class="showBox greenBox">
-        <a class="showBox-Title"> تحویل شده </a>
-        <a href="/" class="showBox-Number"><%- succededCount -%></a>
+        <a class="showBox-Title"> تحویل موفق </a>
+        <a href="/succeded/list" class="showBox-Number"><%- succededCount -%></a>
     </div>
     <div class="showBox violetBox">
         <a class="showBox-Title"> کنسل شده</a>
-        <a href="/" class="showBox-Number"><%- canceledCount -%></a>
+        <a href="/canceled/list" class="showBox-Number"><%- canceledCount -%></a>
     </div>
     <div class="showBox blackBox">
         <a class="showBox-Title"> ناموفق</a>
-        <a href="/" class="showBox-Number"><%- rejectedCount -%></a>
+        <a href="/rejected/list" class="showBox-Number"><%- rejectedCount -%></a>
     </div>
     <div class="showBox redBox">
         <a class="showBox-Title"> با تاخیر</a>
-        <a href="/" class="showBox-Number"><%- delayedCount -%></a>
+        <a href="/delayed/list" class="showBox-Number"><%- delayedCount -%></a>
     </div>
 </div>
 <%- include('./partials/footer.ejs') -%>

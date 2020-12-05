@@ -13,7 +13,7 @@ button{
 }
 </style>
 <div id="main" style="width: 100%; padding-right: 3%">
-<div class="titleBox blueBox">کل پذیرش ها</div>
+<div class="titleBox redBox">با تاخیر</div>
     <table
         id="receptionList"
         class="table table-striped table-bordered"
@@ -103,14 +103,11 @@ button{
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <button id="successButton" class="btn successButton regular-btn"><a href="/reception/success/<%= reception.id  %>">تحویل</a></button> -->
-                        <!-- <button id="cancelButton" class="btn cancelButton regular-btn"><a href="/reception/cancel/<%= reception.id %>"> کنسل</a></button> -->
-                        <!-- <button id="rejectButton" class="btn rejectButton regular-btn"><a href="/reception/reject/<%= reception.id %>">ناموفق</a></button> -->
-                        <button id="reportButton" class="btn reportButton regular-btn">گزارش</button>
+                        <button id="undoButton" class="btn undoButton regular-btn"><a class="material-icons" href="/reception/doing/<%= reception.id  %>">undo </a></button>
+                        <!-- <i class="material-icons">settings_backup_restore</i> -->
                 </td>
             </tr>
-            <% }); %>
+            <% }); %> 
         </tbody>
         <!-- <tfoot> -->
         <!--     <tr> -->

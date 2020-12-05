@@ -12,7 +12,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 name="customerPhoneNumber"
                 class="form-control col my-2 mx-2"
                 type="text"
-                placeholder="نام مشتری را وارد نمایید"
+                placeholder="شماره موبایل مشتری را وارد نمایید"
                 required
                 onfocusout="validatePhoneNumber(this)"
                 value=<%= reception.customerPhoneNumber %> 
@@ -457,7 +457,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
             }
         function validatePhoneNumber(e){
                 let phoneNumber=e.value;    
-                let phoneNumberValidator=/[0123456789]{11}/g
+                let phoneNumberValidator=/^([0-9]{11})$/g
                 if(!phoneNumberValidator.test(phoneNumber)){
                         doError(e, button);
                     } else {

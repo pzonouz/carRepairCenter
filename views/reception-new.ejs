@@ -12,12 +12,12 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 name="customerPhoneNumber"
                 class="form-control col my-2 mx-2"
                 type="text"
-                placeholder="نام مشتری را وارد نمایید"
+                placeholder="شماره موبایل مشتری را وارد نمایید"
                 onfocusout="validatePhoneNumber(this)"
                 required
                 />
                 <datalist id="customerList"> </datalist>
-                <!-- <!-1- <a style="display: block;position:absolute ;" href="/customer/new">اضافه کردن مشتری</a> -1->-->
+                <!-- <span style="display: block;" href="">اضافه کردن مشتری</span> -->
 
                 <!--     <!-1- Trigger the modal with a button -1->-->
                 <!--     <!-1- <button-->
@@ -491,7 +491,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
             }
         function validatePhoneNumber(e){
                 let phoneNumber=e.value;    
-                let phoneNumberValidator=/[0123456789]{11}/g
+                let phoneNumberValidator=/^([0123456789]{11})$/g
                 if(!phoneNumberValidator.test(phoneNumber)){
                         doError(e, button);
                     } else {

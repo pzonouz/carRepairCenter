@@ -1,13 +1,11 @@
 .nav-link {
   color: white !important;
-  font-family: Yekan !important;
   font-size: 1.5rem !important;
 }
 .navbar {
   position: absolute;
 }
 .navbar-brand {
-  font-family: yekan;
   font-weight: bold;
 }
 .nav-item {
@@ -18,16 +16,12 @@
   font-weight: bold;
   text-decoration: none;
 }
-input {
-  font-family: yekan;
-}
 .sign-button {
   color: white !important;
   padding-top: 1%;
   padding-bottom: 1%;
   margin-top: 2%;
   margin-bottom: 2%;
-  font-family: yekan !important;
   font-weight: bold !important;
   font-size: 1.5rem !important;
 }
@@ -55,7 +49,6 @@ input {
   padding-left: 20%;
   position: absolute;
   display: flexbox;
-  font-family: Yekan;
   width: max-content;
   margin-right: 15%;
   margin-left: auto;
@@ -69,9 +62,6 @@ input {
   margin-right: 0%;
   margin-left: auto;
 }
-a {
-  font-family: yekan;
-}
 legend {
   font-size: medium;
   text-align: right;
@@ -84,7 +74,10 @@ fieldset {
   margin-right: 0% !important;
 }
 * {
-  font-family: yekan !important;
+  font-family: yekan;
+}
+table{
+  margin-top:50px;
 }
 td{
   vertical-align: middle !important;
@@ -104,7 +97,11 @@ td{
   /* width: 90%; */
 }
 .btn{
-  margin: 5px !important;
+  /* margin: 5px !important; */
+}
+.undoButton{
+  height:40px;
+  background-color:#b3a101 !important;
 }
 .reportButton {
   background-color: #98a198;
@@ -157,12 +154,24 @@ td{
   top: 20%;
   width: 250px;
   height: 150px;
-  font-family: yekan;
   color: white;
   display: inline-block;
   /* position: absolute; */
   left: 10%;
   right: auto;
+}
+.titleBox {
+  text-align: center;
+  font-size: 2rem;
+  border-radius: 5px;
+  width: 250px;
+  height: 50px;
+  color: white;
+  display: inline-block;
+  position: relative;
+  left: 30%;
+  right: auto;
+  margin-bottom: 20px;
 }
 .showBox a {
   text-decoration: none;
@@ -176,7 +185,6 @@ td{
   position: relative !important;
   text-align: center;
   font-size: 35px;
-  font-family: yekan;
   height: 25%;
   color: white !important;
 }
@@ -266,6 +274,10 @@ td{
 }
 .dropdown-item {
   text-align: right;
+}
+.regular-btn{
+
+  margin: 5px !important;
 }
 .regular-btn a{
   color: white !important;
