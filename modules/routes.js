@@ -403,6 +403,11 @@ router.post("/changePassword", isAuthenticated, (req, res) => {
       res.redirect("/changepassword");
     });
 });
+router.post("/ajax", (_req, res) => {
+  Customer.find({}).then((customers) => {
+    res.send(customers);
+  });
+});
 router.post("/customer/new", isAuthenticated, (req, res) => {
   Customer.findOne({
     phoneNumber: req.body.phoneNumber,

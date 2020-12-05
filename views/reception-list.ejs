@@ -3,22 +3,29 @@ include("./partials/navbar-dashboard.ejs") -%> <%- include('./partials/message.e
 <%- include("./partials/sidebar.ejs") -%>
 <style>
 th{
-    width: 200px !important;
+    <!-- width:min-content; -->
+    padding-left: 15px !important;
+    padding-right: 25px !important;
+    text-align: center !important;
+}
+button{
+    width: 70px;
 }
 </style>
-<div id="main" style="width: 100%; padding-right: 5%">
+<div id="main" style="width: 100%; padding-right: 3%">
     <table
         id="receptionList"
         class="table table-striped table-bordered"
-        style="width: 110%"
+        style="width: 110%;table-layout: fixed;"
+
         >
         <thead>
             <tr>
-                <th>نام مشتری</th>
-                <th style="width:200px !important;">نوع خودرو</th>
-                <th>اظهارات مشتری</th>
-                <th>تاریخ ورود</th>
-                <th>وضعیت</th>
+                <th style="width: 100px;">نام مشتری</th>
+                <th style="width: 100px !important;">نوع خودرو</th>
+                <th style="width: 130px !important;">اظهارات مشتری</th>
+                <th style="width: 90px  !important;">تاریخ ورود</th>
+                <th style="width:50px!important ;">وضعیت</th>
                 <th>عملیات</th>
             </tr>
         </thead>
@@ -26,11 +33,11 @@ th{
             <% receptions.forEach((reception)=>{ %>
             <tr>
                 <td><%= reception.customerLastname %> <%= reception.customerName %><br><%= reception.customerPhoneNumber %></td>
-                <td pstyle="width:200px !important;"><%= reception.vehicleName %></td>
+                <td><%= reception.vehicleName %></td>
                 <td><%= reception.comments %></td>
                 <td><%= reception.date%> <%= reception.time %></td>
                 <td><%= reception.status %></td>
-                <td style="width: 80%">
+                <td>
                     <button id="editButton" class="btn btn-primary regular-btn">
                         <a href="/reception/edit/<%= reception.id %>">ویرایش</a>
                     </button>
@@ -129,6 +136,6 @@ th{
                     " نمایش ";
                 document.getElementById("receptionList_length").lastChild.lastChild.data =
                     " تایی  ";
-                console.log(receptionList_length);
+                <!-- document.getElementById("vehicleType").style.width="500px"; -->
             });
 </script>

@@ -17,8 +17,66 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 required
                 />
                 <datalist id="customerList"> </datalist>
-                <!-- <a href="/customer/new">اضافه کردن مشتری</a> -->
+                <!-- <!-1- <a style="display: block;position:absolute ;" href="/customer/new">اضافه کردن مشتری</a> -1->-->
 
+                <!--     <!-1- Trigger the modal with a button -1->-->
+                <!--     <!-1- <button-->
+                <!--         type="button"-->
+                <!--         class="btn btn-info btn-lg"-->
+                <!--         data-toggle="modal"-->
+                <!--         data-target="#myModal"-->
+                <!--         >-->
+                <!--         Open Modal-->
+                <!--         </button> -1->-->
+
+                <!--         <!-1- Modal -1->-->
+                <!--         <div id="myModal" class="modal fade" role="dialog">-->
+                <!--             <div class="modal-dialog">-->
+                <!--                 <!-1- Modal content-1->-->
+                <!--                 <div class="modal-content">-->
+                <!--                     <div class="modal-header">-->
+                <!--                         <button type="button" class="close" data-dismiss="modal">-->
+                <!--                             &times;-->
+                <!--                         </button>-->
+                <!--                         <h4 class="modal-title"></h4>-->
+                <!--                     </div>-->
+                <!--                     <div class="modal-body">-->
+                <!--                         <p-->
+                <!--                         style="-->
+                <!--                         margin-right: 0 !important;-->
+                <!--                         margin-left: auto !important;-->
+                <!--                         padding-left: 60%;-->
+                <!--                         "-->
+                <!--                         >-->
+                <!--                         آیا از حذف مطمئن هستید؟-->
+                <!--                         </p>-->
+                <!--                     </div>-->
+                <!--                     <div class="modal-footer" style="padding-left: 70%">-->
+                <!--                         <form id="mainForm"-->
+                <!--                             action="/reception/remove/<%=  %>"-->
+                <!--                             method="POST"-->
+                <!--                             style="display: inline-block"-->
+                <!--                             >-->
+                <!--                             <button-->
+                <!--                                 onclick="doSubmit()" type="submit"-->
+                <!--                                 class="btn btn-danger"-->
+                <!--                                 data-dismiss="modal"-->
+                <!--                                 >-->
+                <!--                                 بله-->
+                <!--                             </button>-->
+                <!--                         </form>-->
+
+                <!--                         <button-->
+                <!--                             type="button"-->
+                <!--                             class="btn btn-primary"-->
+                <!--                             data-dismiss="modal"-->
+                <!--                             >-->
+                <!--                             نه-->
+                <!--                         </button>-->
+                <!--                     </div>-->
+                <!--                 </div>-->
+                <!--             </div>-->
+                <!--         </div>-->
                 <input
                 name="comments"
                 class="form-control col my-2 mx-2"
@@ -351,12 +409,14 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 
 <script>
     $(document).ready(() => {
-            $("#customer").keyup(() => {
+            <!-- $("#customer").keyup(() => { -->
+                    <!-- console.log("keyup") -->
                     $.ajax({
                             data: $("#customer").val(),
                             type: "POST",
                             url: "http://localhost:5000/ajax",
                             success: (results, status, xhr) => {
+                                    console.log("data")
                                     let duplicated = false;
                                     for (result of results) {
                                             let text = result["lastName"] + "-" + result["phoneNumber"];
@@ -379,7 +439,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                                         }
                                 },
                         });
-                });
+                <!-- }); -->
         });
 
         //seprator

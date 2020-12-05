@@ -86,7 +86,10 @@ fieldset {
 * {
   font-family: yekan !important;
 }
-
+td{
+  vertical-align: middle !important;
+  text-align: center !important;
+}
 .form-check-label {
   text-align: right;
   width: 100px;
@@ -95,30 +98,13 @@ fieldset {
 .form-group {
   margin-left: 25px !important;
 }
-#editButton {
-  width: 70px;
-  margin: 1px;
-}
-#editButton a:hover {
-  color: white !important;
-}
-#editButton a:active {
-  color: white !important;
-}
-#editButton a:visited {
-  color: white !important;
-}
-#editButton a:focus {
-  color: white !important;
-}
-#editButton a {
-  color: white !important;
-}
-
 #main {
   padding-top: 15%;
   padding-left: 10%;
   /* width: 90%; */
+}
+.btn{
+  margin: 5px !important;
 }
 .reportButton {
   background-color: #98a198;
