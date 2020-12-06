@@ -5,28 +5,30 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
   <div class="container" id="login-box" style="top: 0% !important;">
     <form id="mainForm" class="row-cols-1" action="/customer/new" method="POST" class="row">
       <input
-      dir="ltr"
-      name="name"
-      class="form-control col my-2"
-      type="text"
-      placeholder="نام مشتری را وارد نمایید"
-      />
+        dir="ltr"
+        name="name"
+        class="form-control col my-2"
+        type="text"
+        placeholder="نام مشتری را وارد نمایید"
+        required
+        />
       <input
-      dir="ltr"
-      name="lastName"
-      class="form-control col my-2"
-      type="text"
-      placeholder="نام خانوادگی مشتری را وارد نمایید"
-      />
+        dir="ltr"
+        name="lastName"
+        class="form-control col my-2"
+        type="text"
+        placeholder="نام خانوادگی مشتری را وارد نمایید"
+        required
+        />
       <input
-      dir="ltr"
-      name="phoneNumber"
-      class="form-control" "col my-2"
-      type="text"
-      
-      onkeyup="javascript:validate(this);javascript:validatePhoneNumber(this)"
-      placeholder="شماره موبایل وارد نمایید"
-      />
+        dir="ltr"
+        name="phoneNumber"
+        class="form-control" "col my-2"
+        type="text"
+        required 
+        onkeyup="javascript:validate(this);javascript:validatePhoneNumber(this)"
+        placeholder="شماره موبایل وارد نمایید"
+        />
       <button type="submit" id="submitBtn" class="col btn btn-success sign-button">
         ثبت
       </button>
@@ -35,40 +37,40 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 </div>
 <%- include('./partials/footer.ejs') -%>
 <script>
-      let button = document.getElementById("submitBtn");
-  let validate = (e) => {
-      let pattern = /[۱۲۳۴۵۶۷۸۹]|[^0-9]/g;
-      if (pattern.test(e.value)) {
-          console.log("error");
-          doError(e, button);
-        } else {
-            undoError(e, button);
-          }
-    };
+  let button = document.getElementById("submitBtn");
+    let validate = (e) => {
+        let pattern = /[۱۲۳۴۵۶۷۸۹]|[^0-9]/g;
+        if (pattern.test(e.value)) {
+            console.log("error");
+            doError(e, button);
+          } else {
+              undoError(e, button);
+            }
+      };
     let doError = (e, button) => {
-        e.classList.add("text-danger");
+        e.classList.add("is-invalid");
         button.classList.remove("btn-success");
         button.classList.add("btn-danger");
         button.disabled = true;
       };
     let undoError = (e, button) => {
-        e.classList.remove("text-danger");
+        e.classList.remove("is-invalid");
         button.disabled = false;
         button.classList.add("btn-success");
         button.classList.remove("btn-danger");
       };
-        document.onkeydown=function(e){
-                if((event.keyCode||event.which)==115){
-                        document.getElementById("mainForm").submit()
-                    }
+    document.onkeydown=function(e){
+        if((event.keyCode||event.which)==115){
+            document.getElementById("mainForm").submit()
+          }
+      }
+    function validatePhoneNumber(e){
+        let phoneNumber=e.value;    
+        let phoneNumberValidator=/^([0123456789]{11})$/g
+        if(!phoneNumberValidator.test(phoneNumber)){
+            doError(e, button);
+          } else {
+              undoError(e, button);
             }
-        function validatePhoneNumber(e){
-                let phoneNumber=e.value;    
-                let phoneNumberValidator=/^([0123456789]{11})$/g
-                if(!phoneNumberValidator.test(phoneNumber)){
-                        doError(e, button);
-                    } else {
-                            undoError(e, button);
-                        }
-            }
-</script>
+      }
+t </script>

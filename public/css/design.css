@@ -16,6 +16,15 @@
   font-weight: bold;
   text-decoration: none;
 }
+#customerRegister{
+  position: relative;
+  width: 50%;
+  height: 0px;
+  overflow-y: hidden;
+  margin-right: 0%;
+  margin-left: auto;
+  transition: 1s;
+}
 .sign-button {
   color: white !important;
   padding-top: 1%;
@@ -38,9 +47,9 @@
   position: absolute;
   display: flexbox;
   margin-top: 150px;
-  margin-right: 15%;
-  margin-left: auto;
-  width: 70%;
+  /* margin-right: 15%; */
+  /* margin-left: auto; */
+  width: 100%;
 }
 
 .message {
@@ -93,7 +102,7 @@ td{
 }
 #main {
   padding-top: 15%;
-  padding-left: 10%;
+  padding-left: 0%;
   /* width: 90%; */
 }
 .btn{
@@ -275,6 +284,33 @@ td{
 .dropdown-item {
   text-align: right;
 }
+.expand{
+  background-color:red !important;
+  height:35px !important;
+  width:30px !important;
+  border:none;
+}
+.expand i{
+color:white !important;
+}
+
+/* .expand a:active{ */
+/*   color: white !important; */
+/*   text-decoration: none; */
+/* } */
+/* .expand a:hover{ */
+
+/*   text-decoration: none; */
+/*   color: white !important; */
+/* } */
+/* .expand a:visited{ */
+/*   text-decoration: none; */
+/*   color: white !important; */
+/* } */
+/* .expand a:focus{ */
+/*   text-decoration: none; */
+/*   color: white !important; */
+/* } */
 .regular-btn{
 
   margin: 5px !important;

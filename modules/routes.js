@@ -32,7 +32,7 @@ const translateStatustoFarsi = (status) => {
   if (status === "rejected") return "نا موفق";
   if (status === "canceled") return "کنسلی";
   if (status === "dalayed") return "با تاخیر";
-  if (status === "succeded") return "تحویل موفق";
+  if (status === "succeded") return "آماده";
   if (status === "returned") return "برگشتی";
   return "خطا";
 };
@@ -550,11 +550,39 @@ router.post("/customer/new", isAuthenticated, (req, res) => {
   })
     .then(() => {
       req.flash("success", "یک مشتری با موفقیت ایجاد شد");
-      res.redirect("/customer/new");
+      return res.redirect("/customer/new");
     })
     .catch((err) => {
       req.flash("error", deserializeError(err).message);
-      res.redirect("/customer/new");
+      return res.redirect("/customer/new");
+    });
+});
+router.post("/customer/new/ajax", isAuthenticated, (req, res) => {
+  console.log("Here");
+  Customer.findOne({
+    phoneNumber: req.body.phoneNumber,
+  }).then((customer) => {
+    if (customer) {
+      return res.send({
+        status: "error",
+        msg: "شماره موبایل قبلا ثبت شده است",
+      });
+    }
+    return 0;
+  });
+  Customer.create({
+    name: req.body.name,
+    lastName: req.body.lastName,
+    phoneNumber: req.body.phoneNumber,
+  })
+    .then(() => {
+      return res.send({
+        status: "success",
+        msg: "یک مشتری با موفقیت ایجاد شد",
+      });
+    })
+    .catch((err) => {
+      return res.send({ status: "error", msg: deserializeError(err).message });
     });
 });
 router.post("/reception/new", isAuthenticated, async (req, res) => {
