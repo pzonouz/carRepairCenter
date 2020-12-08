@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const status = {
+const Status = {
   doing: "doing",
   rejected: "rejected",
   canceled: "canceled",
@@ -10,7 +10,7 @@ const status = {
 };
 
 const receptionSchema = new mongoose.Schema({
-  reception_id: { type: Date, required: true },
+  reception_id: { type: Number, required: true },
   status: { type: String, required: true },
   customerPhoneNumber: { type: String, required: true },
   comments: { type: String, required: true },
@@ -33,6 +33,7 @@ const receptionSchema = new mongoose.Schema({
   footStool: { type: String, required: false },
   dangerTriangle: { type: String, required: false },
   logo: { type: String, required: false },
+  remote: { type: String, required: false },
   cable: { type: String, required: false },
   hubcap: { type: String, required: false },
   sportRing: { type: String, required: false },
@@ -55,4 +56,4 @@ const receptionSchema = new mongoose.Schema({
   rejectComment: { type: String },
 });
 const Reception = mongoose.model("Receptions", receptionSchema);
-module.exports = Reception;
+module.exports = { Reception, Status };

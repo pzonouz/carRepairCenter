@@ -7,6 +7,16 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
             <fieldset class="row">
                 <legend>مشتری</legend>
                 <input
+                name="reception_id"
+                hidden
+                value=<%= reception.reception_id%>
+                />
+                <input
+                name="status"
+                hidden
+                value=<%= reception.status%>
+                />
+                <input
                 id="customer"
                 list="customerList"
                 name="customerPhoneNumber"
@@ -19,7 +29,6 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 />
                 <datalist id="customerList"> </datalist>
                 <!-- <a href="/customer/new">اضافه کردن مشتری</a> -->
-
                 <input
                 name="comments"
                 class="form-control col my-2 mx-2"
@@ -47,7 +56,8 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 type="text"
                 placeholder="پلاک را وارد نمایید"
                 required
-                value="<%= reception.license %>"        />
+                value="<%= reception.license %>"  
+                />
                 <input
                 name="VIN"
                 class="form-control col my-2 mx-2"
@@ -107,7 +117,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="spare"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.spare)?'checked':undefined %>             
+                    <%= (reception.spare!="0")?"checked":"" %>
                     name="spare"            
                     />
                     <label for="spare" class="form-check-label">زاپاس</label>
@@ -118,7 +128,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="jack"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.jack)?'checked':undefined %> 
+                    <%= (reception.jack!="0")?"checked":"" %> 
                     name="jack"
                     />
                     <label for="jack" class="form-check-label">جک</label>
@@ -128,7 +138,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="toolBox"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.toolBox)?'checked':undefined %> 
+                    <%= (reception.toolBox!="0")?"checked":"" %> 
                     name="toolBox"
                     />
                     <label for="toolBox" class="form-check-label">جعبه ابزار</label>
@@ -138,7 +148,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="light"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.light)?'checked':undefined %> 
+                    <%= (reception.light!="0")?"checked":"" %> 
                     name="light"
                     />
                     <label for="light" class="form-check-label">فندک</label>
@@ -148,7 +158,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="audioPlayer"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.audioPlayer)?'checked':undefined %> 
+                    <%= (reception.audioPlayer!="0")?"checked":"" %> 
                     name="audioPlayer"
                     />
                     <label for="audioPlayer" class="form-check-label"> پخش</label>
@@ -158,7 +168,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="sunroofTool"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.sunroofTool)?'checked':undefined %> 
+                    <%= (reception.sunroofTool!="0")?"checked":"" %> 
                     name="sunroofTool"
                     />
                     <label for="sunroofTool" class="form-check-label">آچار سانروف</label>
@@ -168,7 +178,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="manual"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.manual)?'checked':undefined %> 
+                    <%= (reception.manual!="0")?"checked":"" %> 
                     name="manual"
                     />
                     <label for="manual" class="form-check-label">دفترچه</label>
@@ -178,7 +188,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="sideMirror"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.sideMirror)?'checked':undefined %> 
+                    <%= (reception.sideMirror!="0")?"checked":"" %> 
                     name="sideMirror"
                     />
                     <label for="sideMirror" class="form-check-label">آینه بغل</label>
@@ -188,7 +198,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="footStool"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.footStool)?'checked':undefined %> 
+                    <%= (reception.footStool!="0")?"checked":"" %> 
                     name="footStool"
                     />
                     <label for="footStool" class="form-check-label">زیرپایی</label>
@@ -198,7 +208,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="dangerTriangle"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.dangerTriangle)?'checked':undefined %> 
+                    <%= (reception.dangerTriangle!="0")?"checked":"" %> 
                     name="dangerTriangle"
                     />
                     <label for="dangerTriangle" class="form-check-label">مثلث خطر</label>
@@ -208,7 +218,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="logo"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.logo)?'checked':undefined %> 
+                    <%= (reception.logo!="0")?"checked":"" %> 
                     name="logo"
                     />
                     <label for="logo" class="form-check-label">آرم جلو پنجره </label>
@@ -218,7 +228,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="cable"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.cable)?'checked':undefined %> 
+                    <%= (reception.cable!="0")?"checked":"" %> 
                     name="cable"
                     />
                     <label for="cable" class="form-check-label">کابل USB</label>
@@ -228,7 +238,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="remote"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.remote)?'checked':undefined %> 
+                    <%= (reception.remote!="0")?"checked":"" %> 
                     name="remote"
                     />
                     <label for="remote" class="form-check-label">ریموت</label>
@@ -238,7 +248,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="hubcap"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.hubcap)?'checked':undefined %> 
+                    <%= (reception.hubcap!="0")?"checked":"" %> 
                     name="hubcap"
                     />
                     <label for="hubcap" class="form-check-label">قالپاق</label>
@@ -248,7 +258,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="sportRing"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.sportRing)?'checked':undefined %> 
+                    <%= (reception.sportRing!="0")?"checked":"" %> 
                     name="sportRing"
                     />
                     <label for="sportRing" class="form-check-label">رینگ اسپورت</label>
@@ -258,7 +268,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="traffic"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.traffic)?'checked':undefined %> 
+                    <%= (reception.traffic!="0")?"checked":"" %> 
                     name="traffic"
                     />
                     <label for="traffic" class="form-check-label">آرم طرح ترافیک</label>
@@ -268,7 +278,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="siren"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.siren)?'checked':undefined %> 
+                    <%= (reception.siren!="0")?"checked":"" %> 
                     name="siren"
                     />
                     <label for="siren" class="form-check-label">دزدگیر</label>
@@ -278,7 +288,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="ashTray"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.ashTray)?'checked':undefined %> 
+                    <%= (reception.ashTray!="0")?"checked":"" %> 
                     name="ashTray"
                     />
                     <label for="ashTray" class="form-check-label">زیرسیگاری</label>
@@ -288,7 +298,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     id="fireExtinguisher"
                     class="form-check-input"
                     type="checkbox"
-                    <%= (reception.fireExtinguisher)?'checked':undefined %> 
+                    <%= (reception.fireExtinguisher!="0")?"checked":"" %> 
                     name="fireExtinguisher"
                     />
                     <label for="fireExtinguisher" class="form-check-label"
@@ -300,7 +310,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             id="rearWiper"
                             class="form-check-input"
                             type="checkbox"
-                            <%= (reception.rearWiper)?'checked':undefined %> 
+                            <%= (reception.rearWiper!="0")?"checked":"" %> 
                             name="rearWiper"
                             />
                             <label for="rearWiper" class="form-check-label">برف پاکن عقب</label>
@@ -310,7 +320,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             id="seatCover"
                             class="form-check-input"
                             type="checkbox"
-                            <%= (reception.seatCover)?'checked':undefined %> 
+                            <%= (reception.seatCover!="0")?"checked":"" %> 
                             name="seatCover"
                             />
                             <label for="seatCover" class="form-check-label">روکش صندلی</label>
@@ -320,7 +330,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             id="wheelWrench"
                             class="form-check-input"
                             type="checkbox"
-                            <%= (reception.wheelWrench)?'checked':undefined %> 
+                            <%= (reception.wheelWrench!="0")?"checked":"" %> 
                             name="wheelWrench"
                             />
                             <label for="wheelWrench" class="form-check-label">آچار چرخ</label>
@@ -330,7 +340,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             id="frontWiper"
                             class="form-check-input"
                             type="checkbox"
-                            <%= (reception.frontWiper)?'checked':undefined %> 
+                            <%= (reception.frontWiper!="0")?"checked":"" %> 
                             name="frontWiper"
                             />
                             <label for="frontWiper" class="form-check-label">برف پاکن جلو</label>
@@ -340,7 +350,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             id="ringLock"
                             class="form-check-input"
                             type="checkbox"
-                            <%= (reception.ringLock)?'checked':undefined %> 
+                            <%= (reception.ringLock!="0")?"checked":"" %> 
                             name="ringLock"
                             />
                             <label for="ringLock" class="form-check-label">قفل رینگ</label>
@@ -350,7 +360,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             id="antenna"
                             class="form-check-input"
                             type="checkbox"
-                            <%= (reception.antenna)?'checked':undefined %> 
+                            <%= (reception.antenna!="0")?"checked":"" %> 
                             name="antenna"
                             />
                             <label for="antenna" class="form-check-label">آنتن</label>
@@ -360,7 +370,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             id="lace"
                             class="form-check-input"
                             type="checkbox"
-                            <%= (reception.lace)?'checked':undefined %> 
+                            <%= (reception.lace!="0")?"checked":"" %> 
                             name="lace"
                             />
                             <label for="lace" class="form-check-label">توری</label>

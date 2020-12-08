@@ -7,22 +7,15 @@ const async = require("async");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const moment = require("jalali-moment");
+const { isUndefined } = require("util");
 const config = require("./config");
 const Customer = require("../models/Customers");
-const Reception = require("../models/Reception");
+const { Reception, Status } = require("../models/Reception");
 const User = require("../models/User");
+const { Log, Operation } = require("../models/Logs");
 /**---------------------------------------------------------
  * !Global Variables
  */
-// status of receptions
-const Status = {
-  doing: "doing",
-  rejected: "rejected",
-  canceled: "canceled",
-  dalayed: "dalayed",
-  succeded: "succeded",
-  returned: "returned",
-};
 
 /**---------------------------------------------------------
  * !Helper Methods
@@ -288,15 +281,39 @@ router.get("/doing/list", isAuthenticated, async (req, res) => {
   res.render("doing-list", { name: req.body.name, receptions });
 });
 router.get("/reception/doing/:id", isAuthenticated, (req, res) => {
-  Reception.findOneAndUpdate({ _id: req.params.id }, { status: Status.doing })
-    .then(() => {
-      req.flash("success", "با موفقیت انجام شد");
-      return res.redirect("/doing/list");
-    })
-    .catch((err) => {
-      req.flash("error", deserializeError(err).message);
-      return res.redirect("/doing/list");
-    });
+  async.waterfall([
+    (done) => {
+      Reception.findOne({ _id: req.params.id })
+        .then((reception) => {
+          done(null, reception);
+        })
+        .catch();
+    },
+    (reception, done) => {
+      Reception.findOneAndUpdate(
+        { _id: req.params.id },
+        { status: Status.doing }
+      )
+        .then(() => {
+          done(null, reception);
+          req.flash("success", "با موفقیت انجام شد");
+          return res.redirect("/doing/list");
+        })
+        .catch((err) => {
+          req.flash("error", deserializeError(err).message);
+          return res.redirect("/doing/list");
+        });
+    },
+    (reception, done) => {
+      Log.create({
+        receptionNewStatus: Status.doing,
+        operationType: Operation.changeStatus,
+        reception_id: reception.reception_id,
+        username: req.user.username,
+        log_id: Date.now(),
+      });
+    },
+  ]);
 });
 router.get("/succeded/list", isAuthenticated, async (req, res) => {
   let receptions = [];
@@ -534,204 +551,108 @@ router.post("/ajax", isAuthenticated, (_req, res) => {
     res.send(customers);
   });
 });
-router.post("/customer/new", isAuthenticated, (req, res) => {
-  Customer.findOne({
+router.post("/customer/new", isAuthenticated, async (req, res) => {
+  let duplicatedPhoneNumber = false;
+  await Customer.findOne({
     phoneNumber: req.body.phoneNumber,
   }).then((customer) => {
     if (customer) {
       req.flash("error", "این شماره موبایل قبلا ثبت شده است");
-      return res.redirect("/customer/new");
+      res.redirect("/customer/new");
+      duplicatedPhoneNumber = true;
     }
   });
-  Customer.create({
-    name: req.body.name,
-    lastName: req.body.lastName,
-    phoneNumber: req.body.phoneNumber,
-  })
-    .then(() => {
-      req.flash("success", "یک مشتری با موفقیت ایجاد شد");
-      return res.redirect("/customer/new");
+  if (!duplicatedPhoneNumber) {
+    await Customer.create({
+      name: req.body.name,
+      lastName: req.body.lastName,
+      phoneNumber: req.body.phoneNumber,
     })
-    .catch((err) => {
-      req.flash("error", deserializeError(err).message);
-      return res.redirect("/customer/new");
-    });
+      .then(() => {
+        req.flash("success", "یک مشتری با موفقیت ایجاد شد");
+        return res.redirect("/customer/new");
+      })
+      .catch((err) => {
+        req.flash("error", deserializeError(err).message);
+        return res.redirect("/customer/new");
+      });
+  }
 });
-router.post("/customer/new/ajax", isAuthenticated, (req, res) => {
-  console.log("Here");
-  Customer.findOne({
+router.post("/customer/new/ajax", isAuthenticated, async (req, res) => {
+  let duplicatedPhoneNumber = false;
+  await Customer.findOne({
     phoneNumber: req.body.phoneNumber,
   }).then((customer) => {
     if (customer) {
-      return res.send({
+      res.send({
         status: "error",
         msg: "شماره موبایل قبلا ثبت شده است",
       });
+      duplicatedPhoneNumber = true;
     }
-    return 0;
   });
-  Customer.create({
-    name: req.body.name,
-    lastName: req.body.lastName,
-    phoneNumber: req.body.phoneNumber,
-  })
-    .then(() => {
-      return res.send({
-        status: "success",
-        msg: "یک مشتری با موفقیت ایجاد شد",
-      });
+  if (!duplicatedPhoneNumber) {
+    await Customer.create({
+      name: req.body.name,
+      lastName: req.body.lastName,
+      phoneNumber: req.body.phoneNumber,
     })
-    .catch((err) => {
-      return res.send({ status: "error", msg: deserializeError(err).message });
-    });
+      .then(() => {
+        return res.send({
+          status: "success",
+          msg: "یک مشتری با موفقیت ایجاد شد",
+        });
+      })
+      .catch((err) => {
+        return res.send({
+          status: "error",
+          msg: deserializeError(err).message,
+        });
+      });
+  }
 });
 router.post("/reception/new", isAuthenticated, async (req, res) => {
-  // setting by JS new features ECMA 6
-  let {
-    customerPhoneNumber,
-    comments,
-    vehicleName,
-    license,
-    VIN,
-    mileage,
-    situation,
-    pricePrediction,
-    prePaid,
-    things,
-    spare,
-    jack,
-    toolBox,
-    light,
-    audioPlayer,
-    sunroofTool,
-    manual,
-    sideMirror,
-    footStool,
-    dangerTriangle,
-    logo,
-    cable,
-    remote,
-    hubcap,
-    sportRing,
-    traffic,
-    siren,
-    ashTray,
-    fireExtinguisher,
-    rearWiper,
-    seatCover,
-    wheelWrench,
-    frontWiper,
-    ringLock,
-    antenna,
-    lace,
-  } = req.body;
-  // try to remove , from numbers
-  pricePrediction = pricePrediction.replace(/,/g, "");
-  prePaid = prePaid.replace(/,/g, "");
-  mileage = mileage.replace(/,/g, "");
-
-  // req.body data but to checkboxs
-  const date = new Date();
-  const formData = {
-    reception_id: date.toISOString(),
-    status: Status.doing,
-    customerPhoneNumber,
-    comments,
-    vehicleName,
-    license,
-    VIN,
-    mileage,
-    situation,
-    pricePrediction,
-    prePaid,
-    things,
-    spare,
-    jack,
-    toolBox,
-    light,
-    audioPlayer,
-    sunroofTool,
-    manual,
-    sideMirror,
-    footStool,
-    dangerTriangle,
-    logo,
-    cable,
-    remote,
-    hubcap,
-    sportRing,
-    traffic,
-    siren,
-    ashTray,
-    fireExtinguisher,
-    rearWiper,
-    seatCover,
-    wheelWrench,
-    frontWiper,
-    ringLock,
-    antenna,
-    lace,
-  };
-
-  await Reception.create(formData)
-    .then(() => {
-      req.flash("success", "پذیرش با موفقیت انجام شد");
-      return res.redirect("/reception/new");
-    })
-    .catch((err) => {
-      req.flash("error", deserializeError(err).message);
-      return res.redirect("/reception/new");
-    });
-});
-router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
-  // setting by JS new features ECMA 6
-  let {
-    customerPhoneNumber,
-    comments,
-    vehicleName,
-    license,
-    VIN,
-    mileage,
-    situation,
-    pricePrediction,
-    prePaid,
-    things,
-    spare,
-    jack,
-    toolBox,
-    light,
-    audioPlayer,
-    sunroofTool,
-    manual,
-    sideMirror,
-    footStool,
-    dangerTriangle,
-    logo,
-    cable,
-    remote,
-    hubcap,
-    sportRing,
-    traffic,
-    siren,
-    ashTray,
-    fireExtinguisher,
-    rearWiper,
-    seatCover,
-    wheelWrench,
-    frontWiper,
-    ringLock,
-    antenna,
-    lace,
-  } = req.body;
-  // try to remove , from numbers
-  pricePrediction = pricePrediction.replace(/,/g, "");
-  prePaid = prePaid.replace(/,/g, "");
-  mileage = mileage.replace(/,/g, "");
-  const date = new Date();
+  const { customerPhoneNumber } = req.body;
+  const { comments } = req.body;
+  const { vehicleName } = req.body;
+  const { license } = req.body;
+  const { VIN } = req.body;
+  const { situation } = req.body;
+  const { things } = req.body;
+  const spare = req.body.spare || 0;
+  const jack = req.body.jack || 0;
+  const toolBox = req.body.toolBox || 0;
+  const light = req.body.light || 0;
+  const audioPlayer = req.body.audioPlayer || 0;
+  const sunroofTool = req.body.sunroofTool || 0;
+  const manual = req.body.manual || 0;
+  const sideMirror = req.body.sideMirror || 0;
+  const footStool = req.body.footStool || 0;
+  const dangerTriangle = req.body.dangerTriangle || 0;
+  const logo = req.body.logo || 0;
+  const cable = req.body.cable || 0;
+  const remote = req.body.remote || 0;
+  const hubcap = req.body.hubcapb || 0;
+  const sportRing = req.body.sportRing || 0;
+  const traffic = req.body.traffic || 0;
+  const siren = req.body.siren || 0;
+  const ashTray = req.body.ashTray || 0;
+  const fireExtinguisher = req.body.fireExtinguisher || 0;
+  const rearWiper = req.body.rearWiper || 0;
+  const seatCover = req.body.seatCover || 0;
+  const wheelWrench = req.body.wheelWrench || 0;
+  const frontWiper = req.body.frontWiper || 0;
+  const ringLock = req.body.ringLock || 0;
+  const antenna = req.body.antenna || 0;
+  const lace = req.body.lace || 0;
+  // tryto remove , from numbers
+  const pricePrediction = req.body.pricePrediction.replace(/,/g, "");
+  const prePaid = req.body.prePaid.replace(/,/g, "");
+  const mileage = req.body.mileage.replace(/,/g, "");
   // let modificationDate = date.now();
   // req.body data but eo checkboxs
   const formData = {
-    // reception_id: date.toISOString(),
+    reception_id: Date.now(),
     status: Status.doing,
     customerPhoneNumber,
     comments,
@@ -770,88 +691,308 @@ router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
     antenna,
     lace,
   };
-  formData[
-    `modification-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`
-  ] = date.toISOString();
-  await Reception.updateOne({ _id: req.params.id }, formData)
-    .then(() => {
-      req.flash("success", "ویرایش با موفقیت انجام شد");
-      return res.redirect(`/reception/edit/${req.params.id}`);
-    })
-    .catch((err) => {
+  async.waterfall(
+    [
+      (done) => {
+        Reception.create(formData)
+          .then(() => {
+            req.flash("success", "پذیرش با موفقیت انجام شد");
+            res.redirect("/reception/new");
+            done(null, formData.reception_id);
+          })
+          .catch((err) => {
+            done(err);
+          });
+      },
+      (reception_id, done) => {
+        Log.create({
+          receptionNewStatus: Status.doing,
+          operationType: Operation.create,
+          reception_id,
+          username: req.user.username,
+          log_id: Date.now(),
+        })
+          .then(() => {})
+          .catch((err) => {
+            done(err);
+          });
+      },
+    ],
+    (err) => {
+      console.log(err);
+    }
+  );
+});
+router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
+  const { status } = req.body;
+  const { reception_id } = req.body;
+  const { customerPhoneNumber } = req.body;
+  const { comments } = req.body;
+  const { vehicleName } = req.body;
+  const { license } = req.body;
+  const { VIN } = req.body;
+  const { situation } = req.body;
+  const { things } = req.body;
+  const spare = req.body.spare || 0;
+  const jack = req.body.jack || 0;
+  const toolBox = req.body.toolBox || 0;
+  const light = req.body.light || 0;
+  const audioPlayer = req.body.audioPlayer || 0;
+  const sunroofTool = req.body.sunroofTool || 0;
+  const manual = req.body.manual || 0;
+  const sideMirror = req.body.sideMirror || 0;
+  const footStool = req.body.footStool || 0;
+  const dangerTriangle = req.body.dangerTriangle || 0;
+  const logo = req.body.logo || 0;
+  const cable = req.body.cable || 0;
+  const remote = req.body.remote || 0;
+  const hubcap = req.body.hubcapb || 0;
+  const sportRing = req.body.sportRing || 0;
+  const traffic = req.body.traffic || 0;
+  const siren = req.body.siren || 0;
+  const ashTray = req.body.ashTray || 0;
+  const fireExtinguisher = req.body.fireExtinguisher || 0;
+  const rearWiper = req.body.rearWiper || 0;
+  const seatCover = req.body.seatCover || 0;
+  const wheelWrench = req.body.wheelWrench || 0;
+  const frontWiper = req.body.frontWiper || 0;
+  const ringLock = req.body.ringLock || 0;
+  const antenna = req.body.antenna || 0;
+  const lace = req.body.lace || 0;
+  // tryto remove , from numbers
+  const pricePrediction = req.body.pricePrediction.replace(/,/g, "");
+  const prePaid = req.body.prePaid.replace(/,/g, "");
+  const mileage = req.body.mileage.replace(/,/g, "");
+  // let modificationDate = date.now();
+  // req.body data but eo checkboxs
+  const formData = {
+    status,
+    customerPhoneNumber,
+    comments,
+    vehicleName,
+    license,
+    VIN,
+    mileage,
+    situation,
+    pricePrediction,
+    prePaid,
+    things,
+    spare,
+    jack,
+    toolBox,
+    light,
+    audioPlayer,
+    sunroofTool,
+    manual,
+    sideMirror,
+    footStool,
+    dangerTriangle,
+    logo,
+    cable,
+    remote,
+    hubcap,
+    sportRing,
+    traffic,
+    siren,
+    ashTray,
+    fireExtinguisher,
+    rearWiper,
+    seatCover,
+    wheelWrench,
+    frontWiper,
+    ringLock,
+    antenna,
+    lace,
+  };
+  async.waterfall(
+    [
+      (done) => {
+        Reception.findOneAndUpdate({ _id: req.params.id }, formData)
+          .then(() => {
+            req.flash("success", "ویرایش با موفقیت انجام شد");
+            res.redirect(`/reception/edit/${req.params.id}`);
+            done(null, reception_id);
+          })
+          .catch((err) => {
+            req.flash("error", deserializeError(err).message);
+            res.redirect(`/reception/edit/${req.params.id}`);
+            done(err);
+          });
+      },
+      (reception_id, done) => {
+        Log.create({
+          receptionNewStatus: status,
+          operationType: Operation.modify,
+          reception_id: Number(reception_id),
+          username: req.user.username,
+          log_id: Date.now(),
+        })
+          .then(() => {})
+          .catch((err) => {
+            console.log(err);
+            done(err);
+          });
+      },
+    ],
+    (err) => {
       req.flash("error", deserializeError(err).message);
-      return res.redirect(`/reception/edit/${req.params.id}`);
-    });
+      res.redirect(`/reception/edit/${req.params.id}`);
+    }
+  );
 });
 router.post("/reception/remove/:id", isAuthenticated, (req, res) => {
-  Reception.findOneAndDelete({ _id: req.params.id })
-    .then(() => {
-      req.flash("success", "با موفقیت حذف گردید");
-      return res.redirect("/reception/list");
-    })
-    .catch((err) => {
-      req.flash("error", serializeError(err).message);
-      return res.redirect("/reception/list");
-    });
+  async.waterfall(
+    [
+      (done) => {
+        Reception.findOne({ _id: req.params.id }).then((reception) => {
+          return done(null, reception.reception_id);
+        });
+      },
+      (reception_id, done) => {
+        Reception.findOneAndDelete({ _id: req.params.id })
+          .then(() => {
+            req.flash("success", "با موفقیت حذف گردید");
+            res.redirect("/reception/list");
+            done(null, reception_id);
+          })
+          .catch((err) => {
+            req.flash("error", deserializeError(err).message);
+            res.redirect("/reception/list");
+            done(err);
+          });
+      },
+      (reception_id, done) => {
+        Log.create({
+          operationType: Operation.remove,
+          reception_id,
+          username: req.user.username,
+          log_id: Date.now(),
+        })
+          .then(() => {})
+          .catch((err) => {
+            done(err);
+          });
+      },
+    ],
+    (err) => {
+      console.log(err);
+    }
+  );
 });
 router.post("/reception/success/:id", isAuthenticated, (req, res) => {
   const finalPayment = req.body.finalPayment.replace(/,/g, "");
   successComment = req.body.successComment;
   const status = Status.succeded;
-  Reception.findOneAndUpdate(
-    { _id: req.params.id },
-    { status, successComment, finalPayment }
-  )
-    .then(() => {
-      req.flash("success", "با موفقیت انجام شد");
-      return res.redirect("/reception/list");
-    })
-    .catch((err) => {
+  async.waterfall(
+    [
+      (done) => {
+        Reception.findOneAndUpdate(
+          { _id: req.params.id },
+          { status, successComment, finalPayment }
+        )
+          .then(() => {
+            req.flash("success", "با موفقیت انجام شد");
+            res.redirect("/succeded/list");
+            done(null);
+          })
+          .catch((err) => {
+            req.flash("error", deserializeError(err).message);
+            res.redirect("/reception/list");
+            done(err);
+          });
+      },
+      (done) => {
+        Reception.findOne({ _id: req.params.id }).then((reception) => {
+          return done(null, reception.reception_id);
+        });
+      },
+      (reception_id, done) => {
+        Log.create({
+          receptionNewStatus: Status.succeded,
+          operationType: Operation.changeStatus,
+          reception_id,
+          username: req.user.username,
+          log_id: Date.now(),
+        })
+          .then(() => {})
+          .catch(() => {});
+      },
+    ],
+    (err) => {
       req.flash("error", deserializeError(err).message);
-      return res.redirect("/reception/list");
-    });
+      res.redirect(`/reception/edit/${req.params.id}`);
+    }
+  );
 });
 router.post("/reception/cancel/:id", isAuthenticated, (req, res) => {
   const cancelPayment = req.body.cancelPayment.replace(/,/g, "");
   const { cancelComment } = req.body;
   const status = Status.canceled;
-  Reception.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      status,
-      cancelPayment,
-      cancelComment,
-    }
-  )
-    .then(() => {
-      req.flash("success", "با موفقیت انجام شد");
-      return res.redirect("/reception/list");
-    })
-    .catch((err) => {
-      req.flash("error", deserializeError(err).message);
-      return res.redirect("/reception/list");
-    });
+  async.waterfall([
+    (done) => {
+      Reception.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          status,
+          cancelPayment,
+          cancelComment,
+        }
+      )
+        .then(() => {
+          req.flash("success", "با موفقیت انجام شد");
+          done(null);
+          return res.redirect("/reception/list");
+        })
+        .catch((err) => {
+          req.flash("error", deserializeError(err).message);
+          return res.redirect("/reception/list");
+        });
+    },
+    (done) => {
+      Log.create({
+        receptionNewStatus: status,
+        operationType: Operation.changeStatus,
+        reception_id: req.body.reception_id,
+        username: req.user.username,
+        log_id: Date.now(),
+      });
+    },
+  ]);
 });
 router.post("/reception/reject/:id", isAuthenticated, (req, res) => {
   const rejectPayment = req.body.rejectPayment.replace(/,/g, "");
   const { rejectComment } = req.body;
   const status = Status.rejected;
-  Reception.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      status,
-      rejectPayment,
-      rejectComment,
-    }
-  )
-    .then(() => {
-      req.flash("success", "با موفقیت انجام شد");
-      return res.redirect("/reception/list");
-    })
-    .catch((err) => {
-      req.flash("error", deserializeError(err).message);
-      return res.redirect("/reception/list");
-    });
+  async.waterfall([
+    (done) => {
+      Reception.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          status,
+          rejectPayment,
+          rejectComment,
+        }
+      )
+        .then(() => {
+          done(null);
+          req.flash("success", "با موفقیت انجام شد");
+          return res.redirect("/reception/list");
+        })
+        .catch((err) => {
+          req.flash("error", deserializeError(err).message);
+          return res.redirect("/reception/list");
+        });
+    },
+    (done) => {
+      Log.create({
+        receptionNewStatus: status,
+        operationType: Operation.changeStatus,
+        reception_id: req.body.reception_id,
+        username: req.user.username,
+        log_id: Date.now(),
+      });
+    },
+  ]);
 });
 
 module.exports = router;

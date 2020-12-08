@@ -16,6 +16,10 @@
   font-weight: bold;
   text-decoration: none;
 }
+#ajaxMessages
+{
+  text-align: right;
+}
 #customerRegister{
   position: relative;
   width: 50%;
@@ -102,8 +106,8 @@ td{
 }
 #main {
   padding-top: 15%;
-  padding-left: 0%;
-  /* width: 90%; */
+  padding-left: 5%;
+  width:105%;
 }
 .btn{
   /* margin: 5px !important; */
@@ -225,8 +229,8 @@ td{
   overflow-x: hidden;
   right: 0;
   top: 70px;
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   font-size: 50px;
   background-color: black;
   color: white;

@@ -7,6 +7,145 @@
     $(document).ready(function () {
             $("#receptionList").DataTable();
         });
+        <!-- sharedLibrary------------------------------------------------------------------------ -->
+            <!-- separate -->
+            function separate(Number) {
+                    Number += "";
+                    Number = Number.replace(",", "");
+                    const x = Number.split(".");
+                    let y = x[0];
+                    const z = x.length > 1 ? `.${x[1]}` : "";
+                    const rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(y)) y = y.replace(rgx, "$1" + "," + "$2");
+                    return y + z;
+                }
+
+            <!-- validation -->
+            validate = (e, button) => {
+                    const regex = /[^0-9,]/g;
+                    const farsiRegex = /[۱۲۳۴۵۶۷۸۹]/g;
+                    if (farsiRegex.test(e.value)) {
+                            doError(e, button);
+                        } else {
+                                undoError(e, button);
+                            }
+                    if (regex.test(e.value)) {
+                            doError(e, button);
+                        } else {
+                                undoError(e, button);
+                            }
+                };
+
+        <!-- error do -->
+            let doError = (e, button) => {
+                    if (e) {
+                            e.classList.add("is-invalid");
+                        }
+                    button.disabled = true;
+                    button.classList.remove("btn-success");
+                    button.classList.add("btn-danger");
+                };
+        <!-- error undo -->
+            let undoError = (e, button) => {
+                    if (e) {
+                            e.classList.remove("is-invalid");
+                        }
+                    button.disabled = false;
+                    button.classList.add("btn-success");
+                    button.classList.remove("btn-danger");
+                };
+        <!-- get customer lastname-phoneNumber list and append it to list -->
+            $(document).ready(() => {
+                    $.ajax({
+                            data: $("#customer").val(),
+                            type: "POST",
+                            url: "http://localhost:5000/ajax",
+                            success: (results, status, xhr) => {
+                                    console.log("data");
+                                    let duplicated = false;
+                                    for (result of results) {
+                                            const text = `${result.lastName}-${result.phoneNumber}`;
+                                            for (content of document.getElementById("customerList").children) {
+                                                    if (text == content.innerHTML) {
+                                                            duplicated = true;
+                                                        }
+                                                }
+                                            if (!duplicated) {
+                                                    const tag = `<option value="${result.phoneNumber}">${result.lastName}-${result.phoneNumber}</option>`;
+                                                    $("#customerList").append(tag);
+                                                }
+                                        }
+                                },
+                        });
+                });
+
+        <!-- submit by key,default key is <F4> and form name is: "mainForm" -->
+            <!-- document.onkeydown = function (e) { -->
+            <!--         if ((event.keyCode || event.which) == 115) { -->
+            <!--                 document.getElementById("mainForm").submit(); -->
+            <!--             } -->
+            <!--     }; -->
+        <!-- phoneNumber validation upon number count is: 11 and start by 0 , -->
+            function validatePhoneNumber(e, button) {
+                    const phoneNumber = e.value;
+                    const phoneNumberValidator = /^(0{1}[0123456789]{10})$/g;
+                    if (!phoneNumberValidator.test(phoneNumber)) {
+                            doError(e, button);
+                        } else {
+                                undoError(e, button);
+                            }
+                }
+
+            <!-- expand Forms -->
+            function expandForm(e, h) {
+                    console.log("here");
+                    const height = e.clientHeight;
+                    if (height == 0) {
+                            document.getElementById("buttonShape").innerText = "remove";
+                            return (e.style.height = `${h}px`);
+                        }
+                    if (height == h) {
+                            document.getElementById("buttonShape").innerText = "add";
+                            return (e.style.height = "0px");
+                        }
+                }
+            <!-- sharedLibrary------------------------------------------------------------------------ -->
+            <!-- receptionNew page-------------------------------------------------------------------- -->
+            <!-- scpecify which button -->
+            const expandableElement = document.getElementById("customerRegister");
+        console.log(expandableElement);
+        const expandHeight = 300;
+        const customertNewButton = document.getElementById("customerNewButton");
+        const receptionNewButton = document.getElementById("receptionNewButton");
+        function customerNewAjax() {
+                console.log("1");
+                $.ajax({
+                        type: "POST",
+                        url: "/customer/new/ajax",
+                        data: {
+                                name: document.getElementById("name").value,
+                                lastName: document.getElementById("lastName").value,
+                                phoneNumber: document.getElementById("phoneNumber").value,
+                            },
+                        success(payload) {
+                                console.log(payload);
+                                document.getElementById("ajaxMessages").style.visibility = "visible";
+
+                                if (payload.status == "success") {
+                                        document.getElementById("ajaxMessages").classList.add("alert-success");
+                                        document.getElementById("ajaxMessages").classList.remove("alert-error");
+                                    }
+                                if (payload.status == "error") {
+                                        document.getElementById("ajaxMessages").classList.add("alert-danger");
+                                        document
+                                            .getElementById("ajaxMessages")
+                                            .classList.remove("alert-success");
+                                    }
+                                document.getElementById("ajaxMessages").innerText = payload.msg;
+                            },
+                    });
+            }
+            <!-- receptionNew page------------------------------------------------------------------ -->
 </script>
 </body>
 </html>

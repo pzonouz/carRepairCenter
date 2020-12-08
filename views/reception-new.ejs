@@ -5,7 +5,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 	<div class="container" id="reception-box" style="top:0% !important">
 		<form  id="mainForm" autocomplete="off" class="" action="/reception/new" method="POST">
 			<fieldset class="row">
-				<button type="button" onclick="javacript:expandForm()"  class="expand my-2 btn col-2 col-sm-1"><i id="buttonShape" class="material-icons">add</i></button>
+				<button type="button" onclick="javascript:expandForm(expandableElement,expandHeight)"  class="expand my-2 btn col-2 col-sm-1"><i id="buttonShape" class="material-icons">add</i></button>
 				<input
 				id="customer"
 				list="customerList"
@@ -13,7 +13,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 				class="form-control col-9 col-sm-5 my-2 mx-2"
 				type="text"
 				placeholder="شماره موبایل مشتری را وارد نمایید"
-				onfocusout="validatePhoneNumber(this)"
+				onfocusout="validatePhoneNumber(this,receptionNewButton)"
 				required
 				/>
 				<datalist id="customerList"> </datalist>
@@ -24,17 +24,15 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 				placeholder="اظهارات مشتری را وارد نمایید"
 				required
 				/>
-				<div tabindex="-1" id="customerRegister" class="container col-12 col-sm-6 mr-4  ">
-					<div tabindex="-1"  class="alert" style="visibility: hidden;" id="ajaxMessages" ltr></div>
-					<div tabindex="-1" id=""  class="row">
+				<div id="customerRegister" class="container col-12 col-sm-6 mr-4  ">
+					<div class="alert" style="visibility: hidden;" id="ajaxMessages"></div>
+					<div id=""  class="row row-cols-1">
 						<input
 						dir="ltr"						
 						id="name"
 						name="name"
 						class="form-control col my-2"
 						type="text"
-						required
-						tabindex="-1"
 						placeholder="نام مشتری را وارد نمایید"
 						/>
 						<input
@@ -43,23 +41,18 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 						name="lastName"
 						class="form-control col my-2"
 						type="text"
-						required
-						tabindex="-1"
 						placeholder="نام خانوادگی مشتری را وارد نمایید"
 						/>
 						<input
 						dir="ltr"
 						id="phoneNumber"
-						onkeyup="javacript:validatePhoneNumber(this)"
 						name="phoneNumber"
-						class="form-control" "col my-2"
+						class="form-control col my-2"
 						type="text"
-						required
-						tabindex="-1"
-						onkeyup="javascript:validate(this);javascript:validatePhoneNumber(this)"
+						onkeyup="javascript:validatePhoneNumber(this,customerNewButton)"
 						placeholder="شماره موبایل وارد نمایید"
 						/>
-						<button tabindex="-1" id="customerNewButton" disabled  onclick="customerNewAjax()" class="col btn btn-success sign-button">
+						<button type="button"  tabindex="-1" id="customerNewButton" disabled  onclick="customerNewAjax()" class="col btn btn-success sign-button">
 
 							ثبت
 						</button>
@@ -93,7 +86,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 				name="mileage"
 				class="form-control col-12 col-sm-5 my-2 mx-2"
 				type="text"
-				onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+				onkeyup="javascript:this.value=separate(this.value);javascript:validate(this,receptionNewButton)"
 				placeholder="کیلومتر فعلی را وارد نمایید"
 				lang="En"
 				required
@@ -109,7 +102,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 				name="pricePrediction"
 				class="form-control col-12 col-sm-5 my-2 mx-2"
 				type="text"
-				onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+				onkeyup="javascript:this.value=separate(this.value);javascript:validate(this,receptionNewButton)"
 				placeholder="هزینه تقریبی را وارد نمایید"
 				required
 				/>
@@ -117,7 +110,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 				name="prePaid"
 				class="form-control col-12 col-sm-5 my-2 mx-2"
 				type="text"
-				onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+				onkeyup="javascript:this.value=separate(this.value);javascript:validate(this,receptionNewButton)"
 				placeholder="مبلغ بیعانه را وارد نمایید"
 				required
 				/>
@@ -379,140 +372,10 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 						</div>
 			</fieldset>
 
-			<button type="submit" id="submitBtn" class="col btn btn-success sign-button">
+			<button type="submit" id="receptionNewButton" class="col btn btn-success sign-button">
 				ثبت
 			</button>
 		</form>
 	</div>
 </div>
 <%- include('./partials/footer.ejs') -%>
-
-<script>
-	$(document).ready(() => {
-			$.ajax({
-					data: $("#customer").val(),
-					type: "POST",
-					url: "http://localhost:5000/ajax",
-					success: (results, status, xhr) => {
-							console.log("data")
-							let duplicated = false;
-							for (result of results) {
-									let text = result["lastName"] + "-" + result["phoneNumber"];
-									for (content of document.getElementById("customerList").children) {
-											if (text == content.innerHTML) {
-													duplicated = true;
-												}
-										}
-									if (!duplicated) {
-											let tag =
-												'<option value="' +
-												result["phoneNumber"] +
-												'">' +
-												result["lastName"] +
-												"-" +
-												result["phoneNumber"] +
-												"</option>";
-											$("#customerList").append(tag);
-										}
-								}
-						},
-				});
-		});
-
-		//seprator
-		function separate(Number) {
-				Number += "";
-				Number = Number.replace(",", "");
-				x = Number.split(".");
-				y = x[0];
-				z = x.length > 1 ? "." + x[1] : "";
-				var rgx = /(\d+)(\d{3})/;
-				while (rgx.test(y)) y = y.replace(rgx, "$1" + "," + "$2");
-				return y + z;
-			}
-
-		//validation
-
-		let button = document.getElementById("customerNewButton");
-		validate = (e) => {
-				let regex = /[^0-9,]/g;
-				let farsiRegex = /[۱۲۳۴۵۶۷۸۹]/g;
-				if (farsiRegex.test(e.value)) {
-						doError(e, button);
-					} else {
-							undoError(e, button);
-						}
-				if (regex.test(e.value)) {
-						doError(e, button);
-					} else {
-							undoError(e, button);
-						}
-			};
-		let doError = (e, button) => {
-				if(e){
-						e.classList.add("is-invalid");
-					}
-				button.disabled = true;
-				button.classList.remove("btn-success");
-				button.classList.add("btn-danger");
-			};
-		let undoError = (e, button) => {
-				if(e){
-						e.classList.remove("is-invalid");
-					}
-				button.disabled = false;
-				button.classList.add("btn-success");
-				button.classList.remove("btn-danger");
-			};  
-		document.onkeydown=function(e){
-				if((event.keyCode||event.which)==115){
-						document.getElementById("mainForm").submit()
-
-					}
-			}
-		function validatePhoneNumber(e){
-				let phoneNumber=e.value;    
-				let phoneNumberValidator=/^([0123456789]{11})$/g
-				if(!phoneNumberValidator.test(phoneNumber)){
-						doError(e, button);
-					} else {
-							undoError(e, button);
-						}
-			}
-		function expandForm(){
-				let height=document.getElementById("customerRegister").clientHeight;
-				<!-- console.log(document.getElementById("buttonShape").innerText); -->
-					if(height==0){
-							document.getElementById("buttonShape").innerText="remove"
-							return	document.getElementById("customerRegister").style.height="300px"
-						}else if(height==300){
-								document.getElementById("buttonShape").innerText="add"
-								return document.getElementById("customerRegister").style.height="0px"
-							}
-			}
-		function customerNewAjax(){
-				$.ajax({
-						type: 'POST',
-						url: '/customer/new/ajax',
-						data: {
-								'name': document.getElementById("name").value,
-								'lastName': document.getElementById("lastName").value,
-								'phoneNumber': document.getElementById("phoneNumber").value,
-							},
-						success: function(payload){
-								console.log(payload);
-								document.getElementById("ajaxMessages").style.visibility="visible"
-
-								if(payload["status"]=="success"){
-										document.getElementById("ajaxMessages").classList.add("alert-success");
-										document.getElementById("ajaxMessages").classList.remove("alert-error");
-									}
-								if(payload["status"]=="error"){
-										document.getElementById("ajaxMessages").classList.add("alert-danger");
-										document.getElementById("ajaxMessages").classList.remove("alert-success");
-									}
-								document.getElementById("ajaxMessages").innerText=payload["msg"]
-							}
-					});
-			}
-</script>
