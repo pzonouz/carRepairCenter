@@ -1,0 +1,500 @@
+<%- include('./partials/header.ejs') -%> <%-
+include('./partials/navbar-dashboard.ejs') -%> <%-
+include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
+<div id="main" class="">
+    <div class="container" id="reception-box" style="top: 0% !important">
+        <div class="row">
+            <fieldset class="row">
+                <legend>مشتری</legend>
+                <input readonly
+                id="customer"
+                class="form-control col my-2 mx-2"
+                type="text"
+                value='<%= reception.customerName %> <%= reception.customerLastname %> <%= reception.customerPhoneNumber %> '
+                />
+                <datalist id="customerList"> </datalist>
+                <!-- <a href="/customer/new">اضافه کردن مشتری</a> -->
+                <input readonly
+                name="comments"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="اظهارات مشتری را وارد نمایید"
+                required
+                value="<%= reception.comments %>"
+
+                />
+            </fieldset>
+
+            <fieldset class="row">
+                <legend>خودرو</legend>
+                <input readonly
+                name="vehicleName"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="نام خودرو را وارد نمایید"
+                required
+                value="<%= reception.vehicleName %>"
+                />
+                <input readonly
+                name="license"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="پلاک را وارد نمایید"
+                required
+                value="<%= reception.license %>"  
+                />
+                <input readonly
+                name="VIN"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="شماره شاسی را وارد نمایید"
+                required
+                value="<%= reception.VIN %>"
+                />
+                <input readonly
+                name="mileage"
+                class="form-control col my-2 mx-2"
+                type="text"
+                onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+                placeholder="کیلومتر فعلی را وارد نمایید"
+                required
+                value=<%= reception.mileage %>
+                />
+                <input readonly
+                name="situation"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="وضعیت ظاهری را وارد نمایید"
+                required
+                value="<%= reception.situation %>"
+                />
+                <input readonly
+                name="pricePrediction"
+                class="form-control col my-2 mx-2"
+                type="text"
+                onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+                placeholder="هزینه تقریبی را وارد نمایید"
+                required
+                value=<%= reception.pricePrediction %>
+                />
+                <input readonly
+                name="prePaid"
+                class="form-control col my-2 mx-2"
+                type="text"
+                onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
+                placeholder="مبلغ بیعانه را وارد نمایید"
+                required
+                value=<%= reception.prePaid %>
+                />
+                <input readonly
+                name="things"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="لوازم همراه را وارد نمایید"
+                required
+                value="<%= reception.things %>"
+                />
+            </fieldset>
+            <fieldset class="row">
+                <legend>لوازم</legend>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="spare"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.spare!="0")?"checked":"" %>
+                    name="spare"            
+                    />
+                    <label for="spare" class="form-check-label">زاپاس</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="jack"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.jack!="0")?"checked":"" %> 
+                    name="jack"
+                    />
+                    <label for="jack" class="form-check-label">جک</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="toolBox"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.toolBox!="0")?"checked":"" %> 
+                    name="toolBox"
+                    />
+                    <label for="toolBox" class="form-check-label">جعبه ابزار</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="light"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.light!="0")?"checked":"" %> 
+                    name="light"
+                    />
+                    <label for="light" class="form-check-label">فندک</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="audioPlayer"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.audioPlayer!="0")?"checked":"" %> 
+                    name="audioPlayer"
+                    />
+                    <label for="audioPlayer" class="form-check-label"> پخش</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="sunroofTool"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.sunroofTool!="0")?"checked":"" %> 
+                    name="sunroofTool"
+                    />
+                    <label for="sunroofTool" class="form-check-label">آچار سانروف</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="manual"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.manual!="0")?"checked":"" %> 
+                    name="manual"
+                    />
+                    <label for="manual" class="form-check-label">دفترچه</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="sideMirror"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.sideMirror!="0")?"checked":"" %> 
+                    name="sideMirror"
+                    />
+                    <label for="sideMirror" class="form-check-label">آینه بغل</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="footStool"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.footStool!="0")?"checked":"" %> 
+                    name="footStool"
+                    />
+                    <label for="footStool" class="form-check-label">زیرپایی</label>
+                </div>       
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="dangerTriangle"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.dangerTriangle!="0")?"checked":"" %> 
+                    name="dangerTriangle"
+                    />
+                    <label for="dangerTriangle" class="form-check-label">مثلث خطر</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="logo"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.logo!="0")?"checked":"" %> 
+                    name="logo"
+                    />
+                    <label for="logo" class="form-check-label">آرم جلو پنجره </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="cable"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.cable!="0")?"checked":"" %> 
+                    name="cable"
+                    />
+                    <label for="cable" class="form-check-label">کابل USB</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="remote"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.remote!="0")?"checked":"" %> 
+                    name="remote"
+                    />
+                    <label for="remote" class="form-check-label">ریموت</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="hubcap"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.hubcap!="0")?"checked":"" %> 
+                    name="hubcap"
+                    />
+                    <label for="hubcap" class="form-check-label">قالپاق</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="sportRing"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.sportRing!="0")?"checked":"" %> 
+                    name="sportRing"
+                    />
+                    <label for="sportRing" class="form-check-label">رینگ اسپورت</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="traffic"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.traffic!="0")?"checked":"" %> 
+                    name="traffic"
+                    />
+                    <label for="traffic" class="form-check-label">آرم طرح ترافیک</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="siren"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.siren!="0")?"checked":"" %> 
+                    name="siren"
+                    />
+                    <label for="siren" class="form-check-label">دزدگیر</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="ashTray"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.ashTray!="0")?"checked":"" %> 
+                    name="ashTray"
+                    />
+                    <label for="ashTray" class="form-check-label">زیرسیگاری</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input readonly
+                    id="fireExtinguisher"
+                    class="form-check-input readonly"
+                    type="checkbox"
+                    <%= (reception.fireExtinguisher!="0")?"checked":"" %> 
+                    name="fireExtinguisher"
+                    />
+                    <label for="fireExtinguisher" class="form-check-label"
+                        >کپسول آتش</label
+                    >
+                </div>
+                        <div class="form-check form-check-inline">
+                            <input readonly
+                            id="rearWiper"
+                            class="form-check-input readonly"
+                            type="checkbox"
+                            <%= (reception.rearWiper!="0")?"checked":"" %> 
+                            name="rearWiper"
+                            />
+                            <label for="rearWiper" class="form-check-label">برف پاکن عقب</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input readonly
+                            id="seatCover"
+                            class="form-check-input readonly"
+                            type="checkbox"
+                            <%= (reception.seatCover!="0")?"checked":"" %> 
+                            name="seatCover"
+                            />
+                            <label for="seatCover" class="form-check-label">روکش صندلی</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input readonly
+                            id="wheelWrench"
+                            class="form-check-input readonly"
+                            type="checkbox"
+                            <%= (reception.wheelWrench!="0")?"checked":"" %> 
+                            name="wheelWrench"
+                            />
+                            <label for="wheelWrench" class="form-check-label">آچار چرخ</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input readonly
+                            id="frontWiper"
+                            class="form-check-input readonly"
+                            type="checkbox"
+                            <%= (reception.frontWiper!="0")?"checked":"" %> 
+                            name="frontWiper"
+                            />
+                            <label for="frontWiper" class="form-check-label">برف پاکن جلو</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input readonly
+                            id="ringLock"
+                            class="form-check-input readonly"
+                            type="checkbox"
+                            <%= (reception.ringLock!="0")?"checked":"" %> 
+                            name="ringLock"
+                            />
+                            <label for="ringLock" class="form-check-label">قفل رینگ</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input readonly
+                            id="antenna"
+                            class="form-check-input readonly"
+                            type="checkbox"
+                            <%= (reception.antenna!="0")?"checked":"" %> 
+                            name="antenna"
+                            />
+                            <label for="antenna" class="form-check-label">آنتن</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input readonly
+                            id="lace"
+                            class="form-check-input readonly"
+                            type="checkbox"
+                            <%= (reception.lace!="0")?"checked":"" %> 
+                            name="lace"
+                            />
+                            <label for="lace" class="form-check-label">توری</label>
+                        </div>
+            </fieldset>
+            <% logsWithJalaliDate.forEach((log)=>{ %>
+            <% if(log.operationType=="changeStatus"|| log.operationType=="modify"){ %>
+            <fieldset class="row">
+                <% if(log.operationType=="changeStatus"){%><legend>تغییر به <%= translateStatustoFarsi(log.receptionNewStatus) %></legend>
+                <input readonly
+                class="form-control col my-2 mx-2"
+                type="text"
+                value=<%= log.username %>
+                />
+                <input readonly
+                class="form-control col my-2 mx-2"
+                type="text"
+                value='<%= log.date %> <%= log.time %>' 
+                />
+                <input readonly
+                class="form-control col my-2 mx-2"
+                type="text"
+                value=<%= log.comment %>
+                />
+                <input readonly
+                class="form-control col my-2 mx-2"
+                type="text"
+                value=<%= log.payment %>
+                />
+            </fieldset>
+            <%}else if(log.operationType=="modify"){%><legend>ویرایش</legend>  
+            <input readonly
+            class="form-control col my-2 mx-2"
+            type="text"
+            value="<%= log.username%>"
+            />
+            <input readonly
+            class="form-control col my-2 mx-2"
+            type="text"
+            value='<%= log.date %> <%= log.time %>' 
+            />
+            </fieldset>
+                    <% } %>
+                <% } %>
+            <% }) %>
+
+        </div>
+    </div>
+</div>
+<%- include('./partials/footer.ejs') -%>
+
+<script>
+    $(document).ready(() => {
+            $("#customer").keyup(() => {
+                    $.ajax({
+                            data: $("#customer").val(),
+                            type: "POST",
+                            url: "http://localhost:5000/ajax",
+                            success: (results, status, xhr) => {
+                                    let duplicated = false;
+                                    for (result of results) {
+                                            let text = result["lastName"] + "-" + result["phoneNumber"];
+                                            for (content of document.getElementById("customerList").children) {
+                                                    if (text == content.innerHTML) {
+                                                            duplicated = true;
+                                                        }
+                                                }
+                                            if (!duplicated) {
+                                                    console.log(result["phoneNumber"]);
+                                                    let tag =
+                                                        '<option value="' +
+                                                        result["phoneNumber"] +
+                                                        '">' +
+                                                        result["lastName"] +
+                                                        "-" +
+                                                        result["phoneNumber"] +
+                                                        "</option>";
+                                                    $("#customerList").append(tag);
+                                                }
+                                        }
+                                },
+                        });
+                });
+        });
+
+        //seprator
+        function separate(Number) {
+                Number += "";
+                Number = Number.replace(",", "");
+                x = Number.split(".");
+                y = x[0];
+                z = x.length > 1 ? "." + x[1] : "";
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(y)) y = y.replace(rgx, "$1" + "," + "$2");
+                return y + z;
+            }
+
+        //validation
+        let button = document.getElementById("submitBtn");
+        validate = (e) => {
+                let regex = /[^0-9,]/g;
+                let farsiRegex = /[۱۲۳۴۵۶۷۸۹]/g;
+                if (farsiRegex.test(e.value)) {
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
+                if (regex.test(e.value)) {
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
+            };
+        let doError = (e, button) => {
+                e.classList.add("text-danger");
+                button.disabled = true;
+                button.classList.remove("btn-success");
+                button.classList.add("btn-danger");
+            };
+        let undoError = (e, button) => {
+                e.classList.remove("text-danger");
+                button.disabled = false;
+                button.classList.add("btn-success");
+                button.classList.remove("btn-danger");
+            };
+        document.onkeydown=function(e){
+                if((event.keyCode||event.which)==115){
+                        document.getElementById("mainForm").submit()
+
+                    }
+            }
+        function validatePhoneNumber(e){
+                let phoneNumber=e.value;    
+                let phoneNumberValidator=/^([0-9]{11})$/g
+                if(!phoneNumberValidator.test(phoneNumber)){
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
+            }
+
+</script>

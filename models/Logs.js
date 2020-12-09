@@ -7,6 +7,8 @@ const Operation = {
   create: "create",
 };
 const logSchema = new mongoose.Schema({
+  comment: { type: String },
+  payment: { type: Number },
   receptionNewStatus: { type: String },
   operationType: { type: String, required: true },
   reception_id: { type: Number, required: true },

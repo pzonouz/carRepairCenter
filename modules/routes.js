@@ -7,7 +7,6 @@ const async = require("async");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const moment = require("jalali-moment");
-const { isUndefined } = require("util");
 const config = require("./config");
 const Customer = require("../models/Customers");
 const { Reception, Status } = require("../models/Reception");
@@ -20,6 +19,15 @@ const { Log, Operation } = require("../models/Logs");
 /**---------------------------------------------------------
  * !Helper Methods
  */
+const isToday = (d) => {
+  const date = new Date(d);
+  const today = new Date();
+  return (
+    today.getDate() === date.getDate() &&
+    today.getMonth() === date.getMonth() &&
+    today.getFullYear === date.getFullYear
+  );
+};
 const translateStatustoFarsi = (status) => {
   if (status === "doing") return "در حال انجام";
   if (status === "rejected") return "نا موفق";
@@ -35,22 +43,41 @@ const elaspedDays = (d) => {
   const days = miliseconds / (1000 * 60 * 60 * 24);
   return days;
 };
-const addCustomerInfoToReception = async (rs) => {
+const addJalaliDateToReception = (reception) => {
+  const date = new Date(reception.reception_id);
+  const dateTime = new Intl.DateTimeFormat("en-US").format(date);
+  // get jalali data (https://www.npmjs.com/package/jalali-moment)
+  const m = moment.from(dateTime, "en", "MM/DD/YYYY");
+  const jDate = m.format("jYYYY/jMM/jDD");
+  // makeing 2 digit hour and minute
+  const time = `${(date.getHours() < 10 ? "0" : "") + date.getHours()}:${
+    (date.getMinutes() < 10 ? "0" : "") + date.getMinutes()
+  }`;
+  reception.date = jDate;
+  reception.time = time;
+  return reception;
+};
+const addJalaliDateToLog = (log) => {
+  const date = new Date(log.log_id);
+  const dateTime = new Intl.DateTimeFormat("en-US").format(date);
+  // get jalali data (https://www.npmjs.com/package/jalali-moment)
+  const m = moment.from(dateTime, "en", "MM/DD/YYYY");
+  const jDate = m.format("jYYYY/jMM/jDD");
+  // makeing 2 digit hour and minute
+  const time = `${(date.getHours() < 10 ? "0" : "") + date.getHours()}:${
+    (date.getMinutes() < 10 ? "0" : "") + date.getMinutes()
+  }`;
+  log.date = jDate;
+  log.time = time;
+  return log;
+};
+const addCustomerInfoToReceptions = async (rs) => {
   const receptions = [];
+  let reception;
   await Promise.all(
-    rs.map(async (reception) => {
+    rs.map(async (r) => {
       // reception Data-time to Jalali
-      const date = new Date(reception.reception_id);
-      const dateTime = new Intl.DateTimeFormat("en-US").format(date);
-      // get jalali data (https://www.npmjs.com/package/jalali-moment)
-      const m = moment.from(dateTime, "en", "MM/DD/YYYY");
-      const jDate = m.format("jYYYY/jMM/jDD");
-      // makeing 2 digit hour and minute
-      const time = `${(date.getHours() < 10 ? "0" : "") + date.getHours()}:${
-        (date.getMinutes() < 10 ? "0" : "") + date.getMinutes()
-      }`;
-      reception.date = jDate;
-      reception.time = time;
+      reception = addJalaliDateToReception(r);
       // reception status
       reception.status = translateStatustoFarsi(reception.status);
       await Customer.findOne({ phoneNumber: reception.customerPhoneNumber })
@@ -59,9 +86,7 @@ const addCustomerInfoToReception = async (rs) => {
           reception.customerLastname = customer.lastName;
           receptions.push(reception);
         })
-        .catch((err) => {
-          console.log("Customer.findone:", serializeError(err).message);
-        });
+        .catch((err) => {});
     })
   );
   return receptions;
@@ -80,16 +105,6 @@ const isSaved = (req, res, next) => {
     return res.redirect("/dashboard");
   }
   return next();
-};
-
-const isToday = (d) => {
-  const date = new Date(d);
-  const today = new Date();
-  return (
-    today.getDate() === date.getDate() &&
-    today.getMonth() === date.getMonth() &&
-    today.getFullYear === date.getFullYear
-  );
 };
 
 /**---------------------------------------------------------
@@ -208,7 +223,7 @@ router.get("/reception/list", isAuthenticated, async (req, res) => {
         name: req.user.name,
       });
     });
-  receptions = await addCustomerInfoToReception(rs);
+  receptions = await addCustomerInfoToReceptions(rs);
   res.render("reception-list", { name: req.user.name, receptions });
 });
 router.get("/reception/edit/:id", isAuthenticated, (req, res) => {
@@ -277,7 +292,7 @@ router.get("/doing/list", isAuthenticated, async (req, res) => {
         receptions,
       });
     });
-  receptions = await addCustomerInfoToReception(rs);
+  receptions = await addCustomerInfoToReceptions(rs);
   res.render("doing-list", { name: req.body.name, receptions });
 });
 router.get("/reception/doing/:id", isAuthenticated, (req, res) => {
@@ -332,7 +347,7 @@ router.get("/succeded/list", isAuthenticated, async (req, res) => {
         receptions,
       });
     });
-  receptions = await addCustomerInfoToReception(rs);
+  receptions = await addCustomerInfoToReceptions(rs);
   res.render("succeded-list", { name: req.body.name, receptions });
 });
 router.get("/canceled/list", isAuthenticated, async (req, res) => {
@@ -352,7 +367,7 @@ router.get("/canceled/list", isAuthenticated, async (req, res) => {
         receptions,
       });
     });
-  receptions = await addCustomerInfoToReception(rs);
+  receptions = await addCustomerInfoToReceptions(rs);
   res.render("canceled-list", { name: req.body.name, receptions });
 });
 router.get("/rejected/list", isAuthenticated, async (req, res) => {
@@ -372,7 +387,7 @@ router.get("/rejected/list", isAuthenticated, async (req, res) => {
         receptions,
       });
     });
-  receptions = await addCustomerInfoToReception(rs);
+  receptions = await addCustomerInfoToReceptions(rs);
   res.render("rejected-list", { name: req.body.name, receptions });
 });
 router.get("/delayed/list", isAuthenticated, async (req, res) => {
@@ -391,12 +406,55 @@ router.get("/delayed/list", isAuthenticated, async (req, res) => {
       req.flash("error", deserializeError(err).message);
       return res.redirect("/dashboard");
     });
-  receptions = await addCustomerInfoToReception(delayedReceptions);
+  receptions = await addCustomerInfoToReceptions(delayedReceptions);
   return res.render("delayed-list", {
     name: req.body.name,
     receptions,
   });
 });
+router.get("/reception/report/:id", isAuthenticated, async (req, res) => {
+  async.waterfall(
+    [
+      (done) => {
+        Reception.find({ _id: req.params.id })
+          .then((receptions) => {
+            done(null, receptions);
+          })
+          .catch((err) => {
+            done(err);
+          });
+      },
+      async (receptions, done) => {
+        const r = await addCustomerInfoToReceptions(receptions);
+        done(null, r);
+      },
+      (receptions, done) => {
+        const reception = receptions[0];
+        Log.find({ reception_id: receptions[0].reception_id })
+          .then((logs) => {
+            const logsWithJalaliDate = logs.map((log) =>
+              addJalaliDateToLog(log)
+            );
+            res.render("reception-report", {
+              name: req.user.name,
+              logsWithJalaliDate,
+              addJalaliDateToLog,
+              reception,
+              translateStatustoFarsi,
+            });
+          })
+          .catch((err) => {
+            done(err);
+          });
+      },
+    ],
+    (err) => {
+      req.flash("error", deserializeError(err).message);
+      res.redirect("/reception/list");
+    }
+  );
+});
+
 /**---------------------------------------------------------
  * ?Routes
  * !POSTs
@@ -881,7 +939,7 @@ router.post("/reception/remove/:id", isAuthenticated, (req, res) => {
 });
 router.post("/reception/success/:id", isAuthenticated, (req, res) => {
   const finalPayment = req.body.finalPayment.replace(/,/g, "");
-  successComment = req.body.successComment;
+  const { successComment } = req.body;
   const status = Status.succeded;
   async.waterfall(
     [
@@ -908,6 +966,8 @@ router.post("/reception/success/:id", isAuthenticated, (req, res) => {
       },
       (reception_id, done) => {
         Log.create({
+          comment: successComment,
+          payment: finalPayment,
           receptionNewStatus: Status.succeded,
           operationType: Operation.changeStatus,
           reception_id,
@@ -950,6 +1010,8 @@ router.post("/reception/cancel/:id", isAuthenticated, (req, res) => {
     },
     (done) => {
       Log.create({
+        comment: cancelComment,
+        payment: cancelPayment,
         receptionNewStatus: status,
         operationType: Operation.changeStatus,
         reception_id: req.body.reception_id,
@@ -985,6 +1047,8 @@ router.post("/reception/reject/:id", isAuthenticated, (req, res) => {
     },
     (done) => {
       Log.create({
+        comment: rejectComment,
+        payment: rejectPayment,
         receptionNewStatus: status,
         operationType: Operation.changeStatus,
         reception_id: req.body.reception_id,
