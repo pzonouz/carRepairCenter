@@ -73,7 +73,7 @@ const addJalaliDateToLog = (log) => {
 };
 const addCustomerInfoToReceptions = async (rs) => {
   const receptions = [];
-  let reception;
+  let reception = {};
   await Promise.all(
     rs.map(async (r) => {
       // reception Data-time to Jalali
@@ -82,9 +82,14 @@ const addCustomerInfoToReceptions = async (rs) => {
       reception.status = translateStatustoFarsi(reception.status);
       await Customer.findOne({ phoneNumber: reception.customerPhoneNumber })
         .then((customer) => {
-          reception.customerName = customer.name;
-          reception.customerLastname = customer.lastName;
-          receptions.push(reception);
+          if (customer) {
+            reception.customerName = customer.name;
+            reception.customerLastname = customer.lastName;
+            receptions.push(reception);
+          } else {
+            req.flash("error", "مشتری پیدا نشد");
+            return res.redirect("/reception/list");
+          }
         })
         .catch((err) => {});
     })
@@ -295,41 +300,6 @@ router.get("/doing/list", isAuthenticated, async (req, res) => {
   receptions = await addCustomerInfoToReceptions(rs);
   res.render("doing-list", { name: req.body.name, receptions });
 });
-router.get("/reception/doing/:id", isAuthenticated, (req, res) => {
-  async.waterfall([
-    (done) => {
-      Reception.findOne({ _id: req.params.id })
-        .then((reception) => {
-          done(null, reception);
-        })
-        .catch();
-    },
-    (reception, done) => {
-      Reception.findOneAndUpdate(
-        { _id: req.params.id },
-        { status: Status.doing }
-      )
-        .then(() => {
-          done(null, reception);
-          req.flash("success", "با موفقیت انجام شد");
-          return res.redirect("/doing/list");
-        })
-        .catch((err) => {
-          req.flash("error", deserializeError(err).message);
-          return res.redirect("/doing/list");
-        });
-    },
-    (reception, done) => {
-      Log.create({
-        receptionNewStatus: Status.doing,
-        operationType: Operation.changeStatus,
-        reception_id: reception.reception_id,
-        username: req.user.username,
-        log_id: Date.now(),
-      });
-    },
-  ]);
-});
 router.get("/succeded/list", isAuthenticated, async (req, res) => {
   let receptions = [];
   let rs = [];
@@ -453,6 +423,16 @@ router.get("/reception/report/:id", isAuthenticated, async (req, res) => {
       res.redirect("/reception/list");
     }
   );
+});
+router.get("/reception/toDoing/:id", isAuthenticated, async (req, res) => {
+  await Reception.findOne({ _id: req.params.id })
+    .then((reception) => {
+      res.render("reception-toDoing", { reception, name: req.user.name });
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
+      res.redirect("/reception-list", { name: req.user.name });
+    });
 });
 
 /**---------------------------------------------------------
@@ -1052,6 +1032,42 @@ router.post("/reception/reject/:id", isAuthenticated, (req, res) => {
         receptionNewStatus: status,
         operationType: Operation.changeStatus,
         reception_id: req.body.reception_id,
+        username: req.user.username,
+        log_id: Date.now(),
+      });
+    },
+  ]);
+});
+router.post("/reception/toDoing/:id", isAuthenticated, (req, res) => {
+  async.waterfall([
+    (done) => {
+      Reception.findOne({ _id: req.params.id })
+        .then((reception) => {
+          done(null, reception);
+        })
+        .catch();
+    },
+    (reception, done) => {
+      Reception.findOneAndUpdate(
+        { _id: req.params.id },
+        { status: Status.doing, toDoingComment: req.body.toDoingComment }
+      )
+        .then(() => {
+          done(null, reception);
+          req.flash("success", "با موفقیت انجام شد");
+          return res.redirect("/doing/list");
+        })
+        .catch((err) => {
+          req.flash("error", deserializeError(err).message);
+          return res.redirect("/doing/list");
+        });
+    },
+    (reception, done) => {
+      Log.create({
+        comment: req.body.toDoingComment,
+        receptionNewStatus: Status.doing,
+        operationType: Operation.changeStatus,
+        reception_id: reception.reception_id,
         username: req.user.username,
         log_id: Date.now(),
       });

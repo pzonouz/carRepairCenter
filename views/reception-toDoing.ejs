@@ -1,0 +1,227 @@
+<%- include('./partials/header.ejs') -%> <%-
+include('./partials/navbar-dashboard.ejs') -%> <%-
+include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
+<style>
+input readonly[type="text"],input readonly[type="checkbox"]{
+    pointer-events: none;
+}
+#cancelPayment,#cancelComment{
+    pointer-events: all; 
+}                                                   
+</style>
+<div id="main" class="">
+    <div class="container" id="reception-box" style="top: 0% !important">
+        <form id="mainForm" autocomplete="off" class="row" action="/reception/toDoing/<%= reception.id %> " method="POST">
+            <fieldset class="row">
+                <legend>مشتری</legend>
+                <input readonly
+                name="reception_id"
+                hidden
+                value=<%= reception.reception_id%>
+                />
+                <input readonly
+                name="status"
+                hidden
+                value=<%= reception.status%>
+                />
+                <input readonly 
+                id="customer"
+                list="customerList"
+                name="customerPhoneNumber"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="نام مشتری را وارد نمایید"
+
+                onfocusout="validatePhoneNumber(this)"
+                value=<%= reception.customerPhoneNumber %> 
+                />
+                <datalist id="customerList"> </datalist>
+                <!-- <a href="/customer/new">اضافه کردن مشتری</a> -->
+
+                <input readonly 
+                name="comments"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="اظهارات مشتری را وارد نمایید"
+
+                value="<%= reception.comments %>"
+
+                />
+            </fieldset>
+
+            <fieldset class="row">
+                <legend>خودرو</legend>
+                <input readonly 
+                name="vehicleName"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="نام خودرو را وارد نمایید"
+
+                value="<%= reception.vehicleName %>"
+                />
+                <input readonly 
+                name="license"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="پلاک را وارد نمایید"
+
+                value="<%= reception.license %>"        />
+                <input readonly 
+                name="VIN"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="شماره شاسی را وارد نمایید"
+
+                value="<%= reception.VIN %>"
+                />
+                <input readonly 
+                name="mileage"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="کیلومتر فعلی را وارد نمایید"
+
+                value=<%= reception.mileage %>
+                />
+                <input readonly 
+                name="situation"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="وضعیت ظاهری را وارد نمایید"
+
+                value="<%= reception.situation %>"
+                />
+                <input readonly 
+                name="pricePrediction"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="هزینه تقریبی را وارد نمایید"
+
+                value=<%= reception.pricePrediction %>
+                />
+                <input readonly 
+                name="prePaid"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="مبلغ بیعانه را وارد نمایید"
+
+                value=<%= reception.prePaid %>
+                />
+                <input readonly 
+                name="things"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="لوازم همراه را وارد نمایید"
+
+                value="<%= reception.things %>"
+                />
+            </fieldset>
+            <fieldset class="row row-cols-1">
+                <legend>بازگشت به انجام</legend>
+                <input  
+                id="toDoingComment"
+                name="toDoingComment"
+                class="form-control col my-2 mx-2"
+                type="text"
+                placeholder="توضیحات"
+                />
+            </fieldset>
+            <button type="submit" id="submitBtn" class="col btn btn-success sign-button">
+                ثبت
+            </button>
+        </form>
+    </div>
+</div>
+<%- include('./partials/footer.ejs') -%>
+
+<script>
+    $(document).ready(() => {
+            $("#customer").keyup(() => {
+                    $.ajax({
+                            data: $("#customer").val(),
+                            type: "POST",
+                            url: "http://localhost:5000/ajax",
+                            success: (results, status, xhr) => {
+                                    let duplicated = false;
+                                    for (result of results) {
+                                            let text = result["lastName"] + "-" + result["phoneNumber"];
+                                            for (content of document.getElementById("customerList").children) {
+                                                    if (text == content.innerHTML) {
+                                                            duplicated = true;
+                                                        }
+                                                }
+                                            if (!duplicated) {
+                                                    console.log(result["phoneNumber"]);
+                                                    let tag =
+                                                        '<option value="' +
+                                                        result["phoneNumber"] +
+                                                        '">' +
+                                                        result["lastName"] +
+                                                        "-" +
+                                                        result["phoneNumber"] +
+                                                        "</option>";
+                                                    $("#customerList").append(tag);
+                                                }
+                                        }
+                                },
+                        });
+                });
+        });
+
+        //seprator
+        function seprate(Number) {
+                Number += "";
+                Number = Number.replace(",", "");
+                x = Number.split(".");
+                y = x[0];
+                z = x.length > 1 ? "." + x[1] : "";
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(y)) y = y.replace(rgx, "$1" + "," + "$2");
+                return y + z;
+            }
+
+        //validation
+        let button = document.getElementById("submitBtn");
+        validate = (e) => {
+                let regex = /[^0-9,]/g;
+                let farsiRegex = /[۱۲۳۴۵۶۷۸۹]/g;
+                if (farsiRegex.test(e.value)) {
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
+                if (regex.test(e.value)) {
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
+            };
+        let doError = (e, button) => {
+                e.classList.add("text-danger");
+                button.disabled = true;
+                button.classList.remove("btn-success");
+                button.classList.add("btn-danger");
+            };
+        let undoError = (e, button) => {
+                e.classList.remove("text-danger");
+                button.disabled = false;
+                button.classList.add("btn-success");
+                button.classList.remove("btn-danger");
+            };
+        document.onkeydown=function(e){
+                if((event.keyCode||event.which)==115){
+                        document.getElementById("mainForm").submit()
+
+                    }
+            }
+        function validatePhoneNumber(e){
+                console.log(e.value)
+                let phoneNumber=e.value;    
+                let phoneNumberValidator=/[0123456789]{11}/g
+                if(!phoneNumberValidator.test(phoneNumber)){
+                        doError(e, button);
+                    } else {
+                            undoError(e, button);
+                        }
+            }
+
+</script>

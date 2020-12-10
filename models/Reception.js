@@ -50,6 +50,7 @@ const receptionSchema = new mongoose.Schema({
   lace: { type: String, required: false },
   finalPayment: { type: Number },
   successComment: { type: String },
+  toDoingComment: { type: String },
   cancelPayment: { type: Number },
   cancelComment: { type: String },
   rejectPayment: { type: Number },
