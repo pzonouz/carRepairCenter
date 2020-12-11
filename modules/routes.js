@@ -1,3 +1,4 @@
+const cool = require("cool-ascii-faces");
 const express = require("express");
 
 const router = express.Router();
@@ -116,6 +117,7 @@ const isSaved = (req, res, next) => {
  * ?Routes
  * !GETs
  */
+router.get("/cool",(req,res)=>{res.send(cool())})
 router.get("/", (_req, res) => {
   // debugger;
   res.render("index");
