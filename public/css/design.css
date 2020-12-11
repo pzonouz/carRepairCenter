@@ -109,9 +109,6 @@ td{
   padding-left: 5%;
   width:105%;
 }
-.btn{
-  /* margin: 5px !important; */
-}
 .undoButton{
   height:40px;
   background-color:#b3a101 !important;
@@ -298,23 +295,6 @@ td{
 color:white !important;
 }
 
-/* .expand a:active{ */
-/*   color: white !important; */
-/*   text-decoration: none; */
-/* } */
-/* .expand a:hover{ */
-
-/*   text-decoration: none; */
-/*   color: white !important; */
-/* } */
-/* .expand a:visited{ */
-/*   text-decoration: none; */
-/*   color: white !important; */
-/* } */
-/* .expand a:focus{ */
-/*   text-decoration: none; */
-/*   color: white !important; */
-/* } */
 .regular-btn{
 
   margin: 5px !important;

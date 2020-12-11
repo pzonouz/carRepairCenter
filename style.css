@@ -1,0 +1,11 @@
+div{
+  position: relative;
+}
+
+div>label{
+  position: absolute;
+}
+input:focus + label{
+color: white;
+background-color: black;
+}

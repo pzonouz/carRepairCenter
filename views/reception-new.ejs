@@ -4,7 +4,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 <div id="main" class="">
 	<div class="container" id="reception-box" style="top:0% !important">
 		<form  id="mainForm" autocomplete="off" class="" action="/reception/new" method="POST">
-			<fieldset class="row">
+			<fieldset class="form-group row">
 				<button type="button" onclick="javascript:expandForm(expandableElement,expandHeight)"  class="expand my-2 btn col-2 col-sm-1"><i id="buttonShape" class="material-icons">add</i></button>
 				<input
 				id="customer"
@@ -17,6 +17,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 				required
 				/>
 				<datalist id="customerList"> </datalist>
+				<!-- <label style="text-align: right;" for="comments">اظهارات مشتری</> -->
 				<input
 				name="comments"
 				class="form-control col-12 col-sm-5 my-2 mx-2"
