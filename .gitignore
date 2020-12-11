@@ -116,5 +116,5 @@ dist
 .pnp.*
 
 #passwords
-config.js
+# config.js
 
