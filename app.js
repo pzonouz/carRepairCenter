@@ -49,7 +49,7 @@ app.use(router);
  * ?Connect Database
  */
 mongoose
-  .connect(config.MONGODB_ATLAS, {
+  .connect(process.env.MONGODB_ATLAS || config.MONGODB_ATLAS, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
