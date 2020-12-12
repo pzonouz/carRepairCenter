@@ -117,7 +117,9 @@ const isSaved = (req, res, next) => {
  * ?Routes
  * !GETs
  */
-router.get("/cool",(req,res)=>{res.send(cool())})
+router.get("/cool", (req, res) => {
+  res.send(cool());
+});
 router.get("/", (_req, res) => {
   // debugger;
   res.render("index");
@@ -506,7 +508,7 @@ router.post("/forget", (req, res) => {
           });
 
           const mailOptions = {
-            from: "Peyman Khalili<p.zonouz@gmail.com>",
+            from: "Peyman Khalili",
             to: user.email,
             subject: "Recovery",
             text: `با سلام. برای بازیابی کلمه عبور خود روی لینک زیر کلیک کنید\n\n http://localhost:5000/reset/${token}`,
