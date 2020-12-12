@@ -14,6 +14,7 @@ button{
 </style>
 <div id="main" style="width: 100%; padding-right: 3%">
 <div class="titleBox blueBox">کل پذیرش ها</div>
+<button style="width: max-content;display: block;" class="btn blueBox regular-btn"><a href="/reception/new">پذیرش جدید</a></button>
     <table
         id="receptionList"
 class="table table-striped table-bordered dt-responsive "
@@ -126,6 +127,9 @@ class="table table-striped table-bordered dt-responsive "
 </div>
 <%- include("./partials/footer.ejs") -%>
 <script>
+    $(document).ready(function () {
+            $("#receptionList").DataTable();
+} );
     function doSubmit(){
             console.log("click")
             document.getElementById("mainForm").submit();

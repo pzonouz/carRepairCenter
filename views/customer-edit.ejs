@@ -3,28 +3,28 @@ include('./partials/navbar-dashboard.ejs') -%> <%-
 include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 <div id="main">
   <div class="container" id="login-box" style="top: 0% !important;">
-    <form id="mainForm" class="row-cols-1" action="/customer/new" method="POST" class="row">
+    <form id="mainForm" class="row-cols-1" action="/customer/edit/<%= customer.id %>" method="POST" class="row">
       <input
-        dir="ltr"
         name="name"
         class="form-control col my-2"
         type="text"
         placeholder="نام مشتری را وارد نمایید"
+        value="<%= customer.name %>"
         required
         />
       <input
-        dir="ltr"
         name="lastName"
         class="form-control col my-2"
         type="text"
         placeholder="نام خانوادگی مشتری را وارد نمایید"
+        value="<%= customer.lastName %>"
         required
         />
       <input
-        dir="ltr"
         name="phoneNumber"
         class="form-control" "col my-2"
         type="text"
+        value="<%= customer.phoneNumber %>"
         required 
         onkeyup="javascript:validate(this);javascript:validatePhoneNumber(this)"
         placeholder="شماره موبایل وارد نمایید"

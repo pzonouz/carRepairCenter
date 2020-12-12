@@ -126,24 +126,23 @@ router.get("/", (_req, res) => {
 });
 router.get("/dashboard", isAuthenticated, async (req, res) => {
   let totalReceptions = 0;
-  let todayTotalReceptions = 0;
+  const todayTotalReceptions = 0;
   let doingCount = 0;
   let rejectedCount = 0;
   let returnedCount = 0;
-  let returnedTodayCount = 0;
+  let customerCount = 0;
   let canceledCount = 0;
-  delayedCount = 0;
+  let delayedCount = 0;
   let succededCount = 0;
   await Reception.find({}).then((receptions) => {
     totalReceptions = receptions.length;
-
     // loop all receptions
     for (const reception of receptions) {
-      // check dates(reception_id)
-      if (isToday(reception.reception_id)) {
-        todayTotalReceptions++;
-        returnedTodayCount++;
-      }
+      // // check dates(reception_id)
+      // if (isToday(reception.reception_id)) {
+      //   todayTotalReceptions++;
+      //   returnedTodayCount++;
+      // }
       // check Status
       if (reception.status === "doing") {
         doingCount++;
@@ -168,6 +167,9 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
       }
     }
   });
+  await Customer.find({}).then((customers) => {
+    customerCount = customers.length;
+  });
   res.render("dashboard", {
     name: req.user.name,
     totalReceptions,
@@ -178,6 +180,7 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
     delayedCount,
     succededCount,
     returnedCount,
+    customerCount,
   });
 });
 router.get("/login", isSaved, (_req, res) => {
@@ -438,7 +441,30 @@ router.get("/reception/toDoing/:id", isAuthenticated, async (req, res) => {
       res.redirect("/reception-list", { name: req.user.name });
     });
 });
-
+router.get("/customer/list", (req, res) => {
+  Customer.find({})
+    .then((customers) => {
+      res.render("customer-list", { name: req.user.name, customers });
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
+      res.redirect("/dashboard");
+    });
+});
+router.get("/customer/edit/:id", (req, res) => {
+  Customer.findOne({ _id: req.params.id })
+    .then((customer) => {
+      if (!customer) {
+        req.flash("error", deserializeError(err).message);
+        return res.redirect("/customer/list");
+      }
+      return res.render("customer-edit", { name: req.user.name, customer });
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
+      res.redirect("/customer/list");
+    });
+});
 /**---------------------------------------------------------
  * ?Routes
  * !POSTs
@@ -1077,6 +1103,57 @@ router.post("/reception/toDoing/:id", isAuthenticated, (req, res) => {
       });
     },
   ]);
+});
+router.post("/customer/edit/:id", (req, res) => {
+  console.log(req.params.id);
+  Customer.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      name: req.body.name,
+      lastName: req.body.lastName,
+      phoneNumber: req.body.phoneNumber,
+    }
+  )
+    .then(() => {
+      req.flash("success", "با موفقیت انجام شد");
+      return res.redirect(`/customer/edit/${req.params.id}`);
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
+      return res.redirect(`/customer/edit/${req.params.id}`);
+    });
+});
+router.post("/customer/remove/:id", async (req, res) => {
+  let ended = false;
+  await Customer.findOne({ _id: req.params.id })
+    .then(async (customer) => {
+      await Reception.find({ customerPhoneNumber: customer.phoneNumber })
+        .then((receptions) => {
+          if (receptions.length > 0) {
+            ended = true;
+            req.flash("error", "برای این مشتری پذیرش ثبت شده است");
+            return res.redirect("/customer/list");
+          }
+        })
+        .catch((err) => {
+          ended = true;
+          req.flash("error", deserializeError(err).message);
+          return res.redirect("/customer/list");
+        });
+    })
+    .catch((err) => {});
+  if (ended) {
+    return;
+  }
+  await Customer.findOneAndDelete({ _id: req.params.id })
+    .then(() => {
+      req.flash("success", "با موفقیت انجام شد");
+      res.redirect("/customer/list");
+    })
+    .catch((err) => {
+      req.flash("error", deserializeError(err).message);
+      res.redirect("/customer/list");
+    });
 });
 
 module.exports = router;

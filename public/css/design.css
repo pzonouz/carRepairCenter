@@ -159,10 +159,13 @@ td{
 .blueBox {
   background-color: #0f67a1 !important;
 }
+.brownBox{
+  background-color: #663300 !important;
+}
 .showBox {
   border-radius: 5px;
   top: 20%;
-  width: 250px;
+  width: 220px;
   height: 150px;
   color: white;
   display: inline-block;
