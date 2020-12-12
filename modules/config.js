@@ -6,7 +6,7 @@ const MONGODB_ATLAS =
 const GMAIL_USERNAME =
   "emailforcarrepaircenter@gmail.com" || process.env.GMAIL_USERNAME;
 const GMAIL_PASSWORD = "passwordforproject" || process.env.GMAIL_PASSWORD;
-const DELAY_CRITERIA = 1; // days
+const DELAY_CRITERIA = 1 || process.env.DELAY_CRITERIA; // days
 
 module.exports = {
   MONGODB_ATLAS,
