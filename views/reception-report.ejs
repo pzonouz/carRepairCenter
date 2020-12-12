@@ -4,7 +4,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 <div id="main" class="">
     <div class="container" id="reception-box" style="top: 0% !important">
         <div class="">
-            <fieldset class="row form-group">
+            <fieldset class="row">
                 <legend>مشتری</legend>
                 <input disabled
                 id="customer"
@@ -25,7 +25,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 />
             </fieldset>
 
-            <fieldset class="row form-group">
+            <fieldset class="row">
                 <legend>خودرو</legend>
                 <input disabled
                 name="vehicleName"
@@ -95,7 +95,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 value="<%= reception.things %>"
                 />
             </fieldset>
-            <fieldset class="row form-group">
+            <fieldset class="row">
                 <legend>لوازم</legend>
                 <div class="form-check form-check-inline">
                     <input disabled
@@ -363,7 +363,7 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
             </fieldset>
             <% logsWithJalaliDate.forEach((log)=>{ %>
             <% if(log.operationType=="changeStatus"|| log.operationType=="modify"){ %>
-            <fieldset class="row form-group">
+            <fieldset class="row">
                 <% if(log.operationType=="changeStatus"){%><legend>تغییر به <%= translateStatustoFarsi(log.receptionNewStatus) %></legend>
                 <input disabled
                 class="form-control col-12 col-sm-5 my-2 mx-2"

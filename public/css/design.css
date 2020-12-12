@@ -12,10 +12,10 @@
   padding-left: 20px;
   padding-right: 20px;
 }
-.nav-link:hover {
-  font-weight: bold;
-  text-decoration: none;
-}
+/* .nav-link:hover { */
+/*   font-weight: bold; */
+/*   text-decoration: none; */
+/* } */
 #ajaxMessages
 {
   text-align: right;
@@ -106,8 +106,8 @@ td{
 }
 #main {
   padding-top: 15%;
-  padding-left: 5%;
-  width:105%;
+  padding-left: 10%;
+  /* width:105%; */
 }
 .undoButton{
   height:40px;
@@ -165,12 +165,12 @@ td{
 .showBox {
   border-radius: 5px;
   top: 20%;
-  width: 220px;
+  width: 250px;
   height: 150px;
   color: white;
   display: inline-block;
   /* position: absolute; */
-  left: 10%;
+  /* left: 10%; */
   right: auto;
 }
 .titleBox {
@@ -295,7 +295,7 @@ td{
   border:none;
 }
 .expand i{
-color:white !important;
+  color:white !important;
 }
 
 .regular-btn{
@@ -316,4 +316,14 @@ color:white !important;
 }
 .regular-btn a:visited{
   color: white !important;
+}
+.dropdown-menu{
+  background-color:#343a40;
+}
+.dropdown-item {
+  color:white ;
+}
+.dropdown-item:hover {
+  color:#343a40 ;
+  background-color: white;
 }

@@ -28,7 +28,7 @@ input[type="text"],input[type="checkbox"]{
                 id="customer"
                 list="customerList"
                 name="customerPhoneNumber"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="نام مشتری را وارد نمایید"
 
@@ -40,7 +40,7 @@ input[type="text"],input[type="checkbox"]{
 
                 <input 
                 name="comments"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="اظهارات مشتری را وارد نمایید"
 
@@ -53,7 +53,7 @@ input[type="text"],input[type="checkbox"]{
                 <legend>خودرو</legend>
                 <input 
                 name="vehicleName"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="نام خودرو را وارد نمایید"
 
@@ -61,14 +61,14 @@ input[type="text"],input[type="checkbox"]{
                 />
                 <input 
                 name="license"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="پلاک را وارد نمایید"
 
                 value="<%= reception.license %>"        />
                 <input 
                 name="VIN"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="شماره شاسی را وارد نمایید"
 
@@ -76,7 +76,7 @@ input[type="text"],input[type="checkbox"]{
                 />
                 <input 
                 name="mileage"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 onkeyup="javascript:this.value=seprate(this.value);javascript:validate(this)"
                 placeholder="کیلومتر فعلی را وارد نمایید"
@@ -85,7 +85,7 @@ input[type="text"],input[type="checkbox"]{
                 />
                 <input 
                 name="situation"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="وضعیت ظاهری را وارد نمایید"
 
@@ -93,7 +93,7 @@ input[type="text"],input[type="checkbox"]{
                 />
                 <input 
                 name="pricePrediction"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 onkeyup="javascript:this.value=seprate(this.value);javascript:validate(this)"
                 placeholder="هزینه تقریبی را وارد نمایید"
@@ -102,7 +102,7 @@ input[type="text"],input[type="checkbox"]{
                 />
                 <input 
                 name="prePaid"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 onkeyup="javascript:this.value=seprate(this.value);javascript:validate(this)"
                 placeholder="مبلغ بیعانه را وارد نمایید"
@@ -111,19 +111,19 @@ input[type="text"],input[type="checkbox"]{
                 />
                 <input 
                 name="things"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="لوازم همراه را وارد نمایید"
 
                 value="<%= reception.things %>"
                 />
             </fieldset>
-            <fieldset class="row row-cols-1">
+            <fieldset class="row">
                 <legend>ناموفق</legend>
                 <input 
                 id="rejectComment"
                 name="rejectComment"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="توضیحات"
                 />
@@ -131,7 +131,7 @@ input[type="text"],input[type="checkbox"]{
                 <input 
                 id="rejectPayment"
                 name="rejectPayment"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 onkeyup="javascript:this.value=seprate(this.value);javascript:validate(this)"
                 type="text"
                 placeholder="پرداخت نهایی را وارد نمایید"

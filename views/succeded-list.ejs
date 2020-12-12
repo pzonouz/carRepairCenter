@@ -16,17 +16,17 @@ button{
 <div class="titleBox greenBox">آماده</div>
     <table
         id="receptionList"
-        class="table table-striped table-bordered"
-        style="width: 110%;table-layout: fixed;"
+class="table table-striped table-bordered dt-responsive "
+        style="width: 100%;table-layout: fixed;"
 
         >
         <thead>
             <tr>
-                <th style="width: 100px;">نام مشتری</th>
-                <th style="width: 100px !important;">نوع خودرو</th>
-                <th style="width: 130px !important;">اظهارات مشتری</th>
-                <th style="width: 90px  !important;">تاریخ ورود</th>
-                <th style="width:50px!important ;">وضعیت</th>
+                <th style="width:100px">نام مشتری</th>
+                <th style="">خودرو </th>
+                <th style="">اظهارات</th>
+                <th style="">تاریخ ورود</th>
+                <th style="">وضعیت</th>
                 <th>عملیات</th>
             </tr>
         </thead>
@@ -108,21 +108,13 @@ button{
                 </td>
             </tr>
             <% }); %> 
-        </tbody>
-        <!-- <tfoot> -->
-        <!--     <tr> -->
-        <!--         <th>نام مشتری</th> -->
-        <!--         <th>نوع خودرو</th> -->
-        <!--         <th>اظهارات مشتری</th> -->
-        <!--         <th>تاریخ ورود</th> -->
-        <!--         <th>وضعیت</th> -->
-        <!--         <th>عملیات</th> -->
-        <!--     </tr> -->
-        <!-- </tfoot> -->
     </table>
 </div>
 <%- include("./partials/footer.ejs") -%>
 <script>
+    $(document).ready(function () {
+            $("#receptionList").DataTable();
+} );
     function doSubmit(){
             console.log("click")
             document.getElementById("mainForm").submit();

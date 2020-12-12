@@ -17,26 +17,62 @@
                     ><%= name %></a
                 >
             </li>
-            <li class="nav-item">
-                <a
-                    class="nav-link"
-                    href="/changePassword"
-                    tabindex="-1"
-                    aria-disabled="true"
-                    >تغییر کلمه عبور</a
-                >
-            </li>
+             <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        پذیرش 
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/reception/new">جدید</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/reception/list">لیست</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+             <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            مشتری
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/customer/new">جدید</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/customer/list">لیست</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+             <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           پروفایل 
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/changePassword">تغیر پسورد</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/logout">خروج</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+            <!-- <li class="nav-item"> -->
+            <!--     <a -->
+            <!--         class="nav-link" -->
+            <!--         href="/changePassword" -->
+            <!--         tabindex="-1" -->
+            <!--         aria-disabled="true" -->
+            <!--         >تغییر کلمه عبور</a -->
+            <!--     > -->
+            <!-- </li> -->
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" tabindex="-1" aria-disabled="true"
-                            >تغییر مشخصات</a
-                        >
-                    </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/logout" tabindex="-1" aria-disabled="true">
-                                    خروج</a
-                                >
-                            </li>
+            <!--         <li class="nav-item"> -->
+            <!--             <a class="nav-link" href="#" tabindex="-1" aria-disabled="true" -->
+            <!--                 >تغییر مشخصات</a -->
+            <!--             > -->
+            <!--         </li> -->
+            <!--                 <li class="nav-item"> -->
+            <!--                     <a class="nav-link" href="/logout" tabindex="-1" aria-disabled="true"> -->
+            <!--                         خروج</a -->
+            <!--                     > -->
+            <!--                 </li> -->
         </ul>
     </div>
 </nav>
