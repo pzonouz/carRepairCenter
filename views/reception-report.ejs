@@ -3,20 +3,20 @@ include('./partials/navbar-dashboard.ejs') -%> <%-
 include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
 <div id="main" class="">
     <div class="container" id="reception-box" style="top: 0% !important">
-        <div class="row">
-            <fieldset class="row">
+        <div class="">
+            <fieldset class="row form-group">
                 <legend>مشتری</legend>
-                <input readonly
+                <input disabled
                 id="customer"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 value='<%= reception.customerName %> <%= reception.customerLastname %> <%= reception.customerPhoneNumber %> '
                 />
                 <datalist id="customerList"> </datalist>
                 <!-- <a href="/customer/new">اضافه کردن مشتری</a> -->
-                <input readonly
+                <input disabled
                 name="comments"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="اظهارات مشتری را وارد نمایید"
                 required
@@ -25,82 +25,82 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 />
             </fieldset>
 
-            <fieldset class="row">
+            <fieldset class="row form-group">
                 <legend>خودرو</legend>
-                <input readonly
+                <input disabled
                 name="vehicleName"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="نام خودرو را وارد نمایید"
                 required
                 value="<%= reception.vehicleName %>"
                 />
-                <input readonly
+                <input disabled
                 name="license"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="پلاک را وارد نمایید"
                 required
                 value="<%= reception.license %>"  
                 />
-                <input readonly
+                <input disabled
                 name="VIN"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="شماره شاسی را وارد نمایید"
                 required
                 value="<%= reception.VIN %>"
                 />
-                <input readonly
+                <input disabled
                 name="mileage"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
                 placeholder="کیلومتر فعلی را وارد نمایید"
                 required
                 value=<%= reception.mileage %>
                 />
-                <input readonly
+                <input disabled
                 name="situation"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="وضعیت ظاهری را وارد نمایید"
                 required
                 value="<%= reception.situation %>"
                 />
-                <input readonly
+                <input disabled
                 name="pricePrediction"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
                 placeholder="هزینه تقریبی را وارد نمایید"
                 required
                 value=<%= reception.pricePrediction %>
                 />
-                <input readonly
+                <input disabled
                 name="prePaid"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 onkeyup="javascript:this.value=separate(this.value);javascript:validate(this)"
                 placeholder="مبلغ بیعانه را وارد نمایید"
                 required
                 value=<%= reception.prePaid %>
                 />
-                <input readonly
+                <input disabled
                 name="things"
-                class="form-control col my-2 mx-2"
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 placeholder="لوازم همراه را وارد نمایید"
                 required
                 value="<%= reception.things %>"
                 />
             </fieldset>
-            <fieldset class="row">
+            <fieldset class="row form-group">
                 <legend>لوازم</legend>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="spare"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.spare!="0")?"checked":"" %>
                     name="spare"            
@@ -109,9 +109,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                 </div>
 
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="jack"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.jack!="0")?"checked":"" %> 
                     name="jack"
@@ -119,9 +119,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="jack" class="form-check-label">جک</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="toolBox"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.toolBox!="0")?"checked":"" %> 
                     name="toolBox"
@@ -129,9 +129,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="toolBox" class="form-check-label">جعبه ابزار</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="light"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.light!="0")?"checked":"" %> 
                     name="light"
@@ -139,9 +139,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="light" class="form-check-label">فندک</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="audioPlayer"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.audioPlayer!="0")?"checked":"" %> 
                     name="audioPlayer"
@@ -149,9 +149,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="audioPlayer" class="form-check-label"> پخش</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="sunroofTool"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.sunroofTool!="0")?"checked":"" %> 
                     name="sunroofTool"
@@ -159,9 +159,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="sunroofTool" class="form-check-label">آچار سانروف</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="manual"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.manual!="0")?"checked":"" %> 
                     name="manual"
@@ -169,9 +169,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="manual" class="form-check-label">دفترچه</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="sideMirror"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.sideMirror!="0")?"checked":"" %> 
                     name="sideMirror"
@@ -179,9 +179,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="sideMirror" class="form-check-label">آینه بغل</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="footStool"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.footStool!="0")?"checked":"" %> 
                     name="footStool"
@@ -189,9 +189,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="footStool" class="form-check-label">زیرپایی</label>
                 </div>       
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="dangerTriangle"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.dangerTriangle!="0")?"checked":"" %> 
                     name="dangerTriangle"
@@ -199,9 +199,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="dangerTriangle" class="form-check-label">مثلث خطر</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="logo"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.logo!="0")?"checked":"" %> 
                     name="logo"
@@ -209,9 +209,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="logo" class="form-check-label">آرم جلو پنجره </label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="cable"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.cable!="0")?"checked":"" %> 
                     name="cable"
@@ -219,9 +219,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="cable" class="form-check-label">کابل USB</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="remote"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.remote!="0")?"checked":"" %> 
                     name="remote"
@@ -229,9 +229,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="remote" class="form-check-label">ریموت</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="hubcap"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.hubcap!="0")?"checked":"" %> 
                     name="hubcap"
@@ -239,9 +239,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="hubcap" class="form-check-label">قالپاق</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="sportRing"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.sportRing!="0")?"checked":"" %> 
                     name="sportRing"
@@ -249,9 +249,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="sportRing" class="form-check-label">رینگ اسپورت</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="traffic"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.traffic!="0")?"checked":"" %> 
                     name="traffic"
@@ -259,9 +259,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="traffic" class="form-check-label">آرم طرح ترافیک</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="siren"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.siren!="0")?"checked":"" %> 
                     name="siren"
@@ -269,9 +269,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="siren" class="form-check-label">دزدگیر</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="ashTray"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.ashTray!="0")?"checked":"" %> 
                     name="ashTray"
@@ -279,9 +279,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     <label for="ashTray" class="form-check-label">زیرسیگاری</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input readonly
+                    <input disabled
                     id="fireExtinguisher"
-                    class="form-check-input readonly"
+                    class="form-check-input disabled"
                     type="checkbox"
                     <%= (reception.fireExtinguisher!="0")?"checked":"" %> 
                     name="fireExtinguisher"
@@ -291,9 +291,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                     >
                 </div>
                         <div class="form-check form-check-inline">
-                            <input readonly
+                            <input disabled
                             id="rearWiper"
-                            class="form-check-input readonly"
+                            class="form-check-input disabled"
                             type="checkbox"
                             <%= (reception.rearWiper!="0")?"checked":"" %> 
                             name="rearWiper"
@@ -301,9 +301,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             <label for="rearWiper" class="form-check-label">برف پاکن عقب</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input readonly
+                            <input disabled
                             id="seatCover"
-                            class="form-check-input readonly"
+                            class="form-check-input disabled"
                             type="checkbox"
                             <%= (reception.seatCover!="0")?"checked":"" %> 
                             name="seatCover"
@@ -311,9 +311,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             <label for="seatCover" class="form-check-label">روکش صندلی</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input readonly
+                            <input disabled
                             id="wheelWrench"
-                            class="form-check-input readonly"
+                            class="form-check-input disabled"
                             type="checkbox"
                             <%= (reception.wheelWrench!="0")?"checked":"" %> 
                             name="wheelWrench"
@@ -321,9 +321,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             <label for="wheelWrench" class="form-check-label">آچار چرخ</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input readonly
+                            <input disabled
                             id="frontWiper"
-                            class="form-check-input readonly"
+                            class="form-check-input disabled"
                             type="checkbox"
                             <%= (reception.frontWiper!="0")?"checked":"" %> 
                             name="frontWiper"
@@ -331,9 +331,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             <label for="frontWiper" class="form-check-label">برف پاکن جلو</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input readonly
+                            <input disabled
                             id="ringLock"
-                            class="form-check-input readonly"
+                            class="form-check-input disabled"
                             type="checkbox"
                             <%= (reception.ringLock!="0")?"checked":"" %> 
                             name="ringLock"
@@ -341,9 +341,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             <label for="ringLock" class="form-check-label">قفل رینگ</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input readonly
+                            <input disabled
                             id="antenna"
-                            class="form-check-input readonly"
+                            class="form-check-input disabled"
                             type="checkbox"
                             <%= (reception.antenna!="0")?"checked":"" %> 
                             name="antenna"
@@ -351,9 +351,9 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
                             <label for="antenna" class="form-check-label">آنتن</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input readonly
+                            <input disabled
                             id="lace"
-                            class="form-check-input readonly"
+                            class="form-check-input disabled"
                             type="checkbox"
                             <%= (reception.lace!="0")?"checked":"" %> 
                             name="lace"
@@ -363,37 +363,37 @@ include('./partials/message.ejs') -%> <%- include('./partials/sidebar.ejs') -%>
             </fieldset>
             <% logsWithJalaliDate.forEach((log)=>{ %>
             <% if(log.operationType=="changeStatus"|| log.operationType=="modify"){ %>
-            <fieldset class="row">
+            <fieldset class="row form-group">
                 <% if(log.operationType=="changeStatus"){%><legend>تغییر به <%= translateStatustoFarsi(log.receptionNewStatus) %></legend>
-                <input readonly
-                class="form-control col my-2 mx-2"
+                <input disabled
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 value=<%= log.username %>
                 />
-                <input readonly
-                class="form-control col my-2 mx-2"
+                <input disabled
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 value='<%= log.date %> <%= log.time %>' 
                 />
-                <input readonly
-                class="form-control col my-2 mx-2"
+                <input disabled
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 value=<%= log.comment %>
                 />
-                <input readonly
-                class="form-control col my-2 mx-2"
+                <input disabled
+                class="form-control col-12 col-sm-5 my-2 mx-2"
                 type="text"
                 value=<%= log.payment %>
                 />
             </fieldset>
             <%}else if(log.operationType=="modify"){%><legend>ویرایش</legend>  
-            <input readonly
-            class="form-control col my-2 mx-2"
+            <input disabled
+            class="form-control col-12 col-sm-5 my-2 mx-2"
             type="text"
             value="<%= log.username%>"
             />
-            <input readonly
-            class="form-control col my-2 mx-2"
+            <input disabled
+            class="form-control col-12 col-sm-5 my-2 mx-2"
             type="text"
             value='<%= log.date %> <%= log.time %>' 
             />

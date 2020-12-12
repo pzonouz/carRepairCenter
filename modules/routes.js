@@ -476,7 +476,7 @@ router.post("/forget", (req, res) => {
     .then((user) => {
       if (!user) {
         req.flash("error", "این ایمیل یافت نشد");
-        res.redirect("/forget");
+        return res.redirect("/forget");
       }
       async.waterfall([
         (done) => {
