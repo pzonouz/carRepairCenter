@@ -13,6 +13,8 @@ const flash = require("connect-flash");
 const mongoose = require("mongoose");
 // log in terminal throught node running
 const logger = require("morgan");
+// CORS
+const cors = require("cors");
 // authentication tool
 const passport = require("./modules/authenticate");
 // I put some config data in there
@@ -43,6 +45,10 @@ app.use((req, res, next) => {
 });
 app.use(passport.initialize());
 app.use(passport.session());
+// const corsOptions = {
+//   origin: "http://localhost:5000",
+// };
+app.use(cors());
 // Always use in the end
 app.use(router);
 /**---------------------------------------------------------
