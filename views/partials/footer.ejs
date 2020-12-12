@@ -58,7 +58,7 @@
                     $.ajax({
                             data: $("#customer").val(),
                             type: "POST",
-                            url: "http://localhost:5000/ajax",
+                            url: "/ajax",
                             success: (results, status, xhr) => {
                                     console.log("data");
                                     let duplicated = false;
