@@ -172,14 +172,14 @@ td{
 }
 .titleBox {
   text-align: center;
-  font-size: 2rem;
+  font-size: 5vw;
   border-radius: 5px;
-  width: 250px;
-  height: 50px;
+  width: 50%;
+  height: 20%;
   color: white;
   display: inline-block;
   position: relative;
-  left: 30%;
+  left: 20%;
   right: auto;
   margin-bottom: 20px;
 }
