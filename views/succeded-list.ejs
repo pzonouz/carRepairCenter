@@ -3,129 +3,129 @@ include("./partials/navbar-dashboard.ejs") -%> <%- include('./partials/message.e
 <%- include("./partials/sidebar.ejs") -%>
 <style>
 th{
-    <!-- width:min-content; -->
-    padding-left: 15px !important;
-    padding-right: 25px !important;
-    text-align: center !important;
+  <!-- width:min-content; -->
+padding-left: 15px !important;
+padding-right: 25px !important;
+text-align: center !important;
 }
 button{
-    width: 70px;
+  width: 70px;
 }
 </style>
 <div id="main" style="width: 100%; padding-right: 3%">
-<div class="titleBox greenBox">آماده</div>
-    <table
-        id="receptionList"
-class="table table-striped table-bordered dt-responsive "
-        style="width: 100%;table-layout: fixed;"
+  <div class="titleBox greenBox">آماده</div>
+  <table
+    id="receptionList"
+    class="table table-striped table-bordered dt-responsive "
+    style="width: 100%;table-layout: fixed;"
 
-        >
-        <thead>
-            <tr>
-                <th style="width:100px">نام مشتری</th>
-                <th style="">خودرو </th>
-                <th style="">اظهارات</th>
-                <th style="">تاریخ ورود</th>
-                <th style="">وضعیت</th>
-                <th>عملیات</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% receptions.forEach((reception)=>{ %>
-            <tr>
-                <td><%= reception.customerLastname %> <%= reception.customerName %><br><%= reception.customerPhoneNumber %></td>
-                <td><%= reception.vehicleName %></td>
-                <td><%= reception.comments %></td>
-                <td><%= reception.date%> <%= reception.time %></td>
-                <td><%= reception.status %></td>
-                <td>
-                    <button id="editButton" class="btn btn-primary regular-btn">
-                        <a href="/reception/edit/<%= reception.id %>">ویرایش</a>
+    >
+    <thead>
+      <tr>
+        <th style="width:100px">نام مشتری</th>
+        <th style="">خودرو </th>
+        <th style="">اظهارات</th>
+        <th style="">تاریخ ورود</th>
+        <th style="">وضعیت</th>
+        <th>عملیات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% receptions.forEach((reception)=>{ %>
+      <tr>
+        <td><%= reception.customerLastname %> <%= reception.customerName %><br><%= reception.customerPhoneNumber %></td>
+        <td><%= reception.vehicleName %></td>
+        <td><%= reception.comments %></td>
+        <td><%= reception.date%> <%= reception.time %></td>
+        <td><%= reception.status %></td>
+        <td>
+          <button id="editButton" class="btn btn-primary regular-btn">
+            <a href="/reception/edit/<%= reception.id %>">ویرایش</a>
+          </button>
+          <button id="deleteButton" class="btn btn-danger regular-btn">
+            <a href="#" data-toggle="modal" data-target="#myModal">حذف</a>
+          </button>
+          <!-- Trigger the modal with a button -->
+          <!-- <button
+            type="button"
+            class="btn btn-info btn-lg"
+            data-toggle="modal"
+            data-target="#myModal"
+            >
+            Open Modal
+            </button> -->
+
+            <!-- Modal -->
+            <div id="myModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                      &times;
                     </button>
-                    <button id="deleteButton" class="btn btn-danger regular-btn">
-                        <a href="#" data-toggle="modal" data-target="#myModal">حذف</a>
-                    </button>
-                    <!-- Trigger the modal with a button -->
-                    <!-- <button
-                        type="button"
-                        class="btn btn-info btn-lg"
-                        data-toggle="modal"
-                        data-target="#myModal"
+                    <h4 class="modal-title"></h4>
+                  </div>
+                  <div class="modal-body">
+                    <p
+                    style="
+                    margin-right: 0 !important;
+                    margin-left: auto !important;
+                    padding-left: 60%;
+                    "
+                    >
+                    آیا از حذف مطمئن هستید؟
+                    </p>
+                  </div>
+                  <div class="modal-footer" style="padding-left: 70%">
+                    <form id="mainForm"
+                      action="/reception/remove/<%= reception.id %>"
+                      method="POST"
+                      style="display: inline-block"
+                      >
+                      <button
+                        onclick="doSubmit()" type="submit"
+                        class="btn btn-danger"
+                        data-dismiss="modal"
                         >
-                        Open Modal
-                        </button> -->
+                        بله
+                      </button>
+                    </form>
 
-                        <!-- Modal -->
-                        <div id="myModal" class="modal fade" role="dialog">
-                            <div class="modal-dialog">
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">
-                                            &times;
-                                        </button>
-                                        <h4 class="modal-title"></h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p
-                                        style="
-                                        margin-right: 0 !important;
-                                        margin-left: auto !important;
-                                        padding-left: 60%;
-                                        "
-                                        >
-                                        آیا از حذف مطمئن هستید؟
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer" style="padding-left: 70%">
-                                        <form id="mainForm"
-                                            action="/reception/remove/<%= reception.id %>"
-                                            method="POST"
-                                            style="display: inline-block"
-                                            >
-                                            <button
-                                                onclick="doSubmit()" type="submit"
-                                                class="btn btn-danger"
-                                                data-dismiss="modal"
-                                                >
-                                                بله
-                                            </button>
-                                        </form>
-
-                                        <button
-                                            type="button"
-                                            class="btn btn-primary"
-                                            data-dismiss="modal"
-                                            >
-                                            نه
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button id="undoButton" class="btn undoButton regular-btn"><a class="material-icons" href="/reception/toDoing/<%= reception.id  %>">undo </a></button>
-                        <!-- <i class="material-icons">settings_backup_restore</i> -->
-                </td>
-            </tr>
-            <% }); %> 
-    </table>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      data-dismiss="modal"
+                      >
+                      نه
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button id="undoButton" class="btn undoButton regular-btn"><a class="material-icons" href="/reception/toDoing/<%= reception.id  %>">undo </a></button>
+            <!-- <i class="material-icons">settings_backup_restore</i> -->
+        </td>
+      </tr>
+      <% }); %> 
+  </table>
 </div>
 <%- include("./partials/footer.ejs") -%>
 <script>
-    $(document).ready(function () {
-            $("#receptionList").DataTable();
-} );
+  $(document).ready(function () {
+      $("#receptionList").DataTable();
+    } );
     function doSubmit(){
-            console.log("click")
-            document.getElementById("mainForm").submit();
-        };
-        $(document).ready(() => {
-                let searchEelement = document.getElementById("receptionList_filter");
-                let searchLabel = (searchEelement.firstChild.firstChild.data = "جستجو: ");
-                document.getElementById("receptionList_length").firstChild.firstChild.data =
-                    " نمایش ";
-                document.getElementById("receptionList_length").lastChild.lastChild.data =
-                    " تایی  ";
-                <!-- document.getElementById("vehicleType").style.width="500px"; -->
-            });
+        console.log("click")
+        document.getElementById("mainForm").submit();
+      };
+    $(document).ready(() => {
+        let searchEelement = document.getElementById("receptionList_filter");
+        let searchLabel = (searchEelement.firstChild.firstChild.data = "جستجو: ");
+        document.getElementById("receptionList_length").firstChild.firstChild.data =
+          " نمایش ";
+        document.getElementById("receptionList_length").lastChild.lastChild.data =
+          " تایی  ";
+        <!-- document.getElementById("vehicleType").style.width="500px"; -->
+      });
 </script>
