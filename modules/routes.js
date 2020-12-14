@@ -20,15 +20,15 @@ const { Log, Operation } = require("../models/Logs");
 /**---------------------------------------------------------
  * !Helper Methods
  */
-const isToday = (d) => {
-  const date = new Date(d);
-  const today = new Date();
-  return (
-    today.getDate() === date.getDate() &&
-    today.getMonth() === date.getMonth() &&
-    today.getFullYear === date.getFullYear
-  );
-};
+// const isToday = (d) => {
+//   const date = new Date(d);
+//   const today = new Date();
+//   return (
+//     today.getDate() === date.getDate() &&
+//     today.getMonth() === date.getMonth() &&
+//     today.getFullYear === date.getFullYear
+//   );
+// };
 const translateStatustoFarsi = (status) => {
   if (status === "doing") return "در حال انجام";
   if (status === "rejected") return "نا موفق";
@@ -45,7 +45,7 @@ const elaspedDays = (d) => {
   return days;
 };
 const addJalaliDateToReception = (reception) => {
-  const date = new Date(reception.reception_id);
+  const date = new Date(reception.receptionId);
   const dateTime = new Intl.DateTimeFormat("en-US").format(date);
   // get jalali data (https://www.npmjs.com/package/jalali-moment)
   const m = moment.from(dateTime, "en", "MM/DD/YYYY");
@@ -54,8 +54,8 @@ const addJalaliDateToReception = (reception) => {
   const time = `${(date.getHours() < 10 ? "0" : "") + date.getHours()}:${
     (date.getMinutes() < 10 ? "0" : "") + date.getMinutes()
   }`;
-  reception.date = jDate;
-  reception.time = time;
+  Object.assign(reception, { date: jDate }); // reception.date = jDate;
+  Object.assign(reception, { time }); // reception.time = time;
   return reception;
 };
 const addJalaliDateToLog = (log) => {
@@ -68,8 +68,8 @@ const addJalaliDateToLog = (log) => {
   const time = `${(date.getHours() < 10 ? "0" : "") + date.getHours()}:${
     (date.getMinutes() < 10 ? "0" : "") + date.getMinutes()
   }`;
-  log.date = jDate;
-  log.time = time;
+  Object.assign(log, { date: jDate }); // log.date = jDate;
+  Object.assign(log, time); // log.time = time;
   return log;
 };
 const addCustomerInfoToReceptions = async (rs) => {
@@ -81,18 +81,17 @@ const addCustomerInfoToReceptions = async (rs) => {
       reception = addJalaliDateToReception(r);
       // reception status
       reception.status = translateStatustoFarsi(reception.status);
-      await Customer.findOne({ phoneNumber: reception.customerPhoneNumber })
-        .then((customer) => {
-          if (customer) {
-            reception.customerName = customer.name;
-            reception.customerLastname = customer.lastName;
-            receptions.push(reception);
-          } else {
-            req.flash("error", "مشتری پیدا نشد");
-            return res.redirect("/reception/list");
-          }
-        })
-        .catch((err) => {});
+      await Customer.findOne({
+        phoneNumber: reception.customerPhoneNumber,
+      }).then((customer) => {
+        if (customer) {
+          reception.customerName = customer.name;
+          reception.customerLastname = customer.lastName;
+          return receptions.push(reception);
+        }
+        return 0;
+      });
+      //  .catch((err) => {});
     })
   );
   return receptions;
@@ -117,7 +116,7 @@ const isSaved = (req, res, next) => {
  * ?Routes
  * !GETs
  */
-router.get("/cool", (req, res) => {
+router.get("/cool", (_req, res) => {
   res.send(cool());
 });
 router.get("/", (_req, res) => {
@@ -137,33 +136,33 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
   await Reception.find({}).then((receptions) => {
     totalReceptions = receptions.length;
     // loop all receptions
-    for (const reception of receptions) {
-      // // check dates(reception_id)
-      // if (isToday(reception.reception_id)) {
+    for (let i = 0; i < receptions.length; i += 1) {
+      // // check dates(receptionId)
+      // if (isToday(reception.receptionId)) {
       //   todayTotalReceptions++;
       //   returnedTodayCount++;
       // }
       // check Status
-      if (reception.status === "doing") {
-        doingCount++;
+      if (receptions[i].status === "doing") {
+        doingCount += 1;
       }
-      if (reception.status === "rejected") {
-        rejectedCount++;
+      if (receptions[i].status === "rejected") {
+        rejectedCount += 1;
       }
-      if (reception.status === "canceled") {
-        canceledCount++;
+      if (receptions[i].status === "canceled") {
+        canceledCount += 1;
       }
       if (
-        elaspedDays(reception.reception_id) > config.DELAY_CRITERIA &&
-        reception.status == Status.doing
+        elaspedDays(receptions[i].receptionId) > config.DELAY_CRITERIA &&
+        receptions[i].status === Status.doing
       ) {
-        delayedCount++;
+        delayedCount += 1;
       }
-      if (reception.status === "succeded") {
-        succededCount++;
+      if (receptions[i].status === "succeded") {
+        succededCount += 1;
       }
-      if (reception.status === "returned") {
-        returnedCount++;
+      if (receptions[i].status === "returned") {
+        returnedCount += 1;
       }
     }
   });
@@ -247,7 +246,6 @@ router.get("/reception/edit/:id", isAuthenticated, (req, res) => {
       });
     })
     .catch((err) => {
-      console.log("Error from Reception findOne:", err);
       req.flash("error", deserializeError(err).message);
       return res.redirect("/reception/list");
     });
@@ -293,7 +291,7 @@ router.get("/doing/list", isAuthenticated, async (req, res) => {
   await Reception.find({})
     .then((rec) => {
       rs = rec.filter((r) => {
-        return r.status == Status.doing;
+        return r.status === Status.doing;
       });
     })
     .catch(() => {
@@ -313,7 +311,7 @@ router.get("/succeded/list", isAuthenticated, async (req, res) => {
   await Reception.find({})
     .then((rec) => {
       rs = rec.filter((r) => {
-        return r.status == Status.succeded;
+        return r.status === Status.succeded;
       });
     })
     .catch(() => {
@@ -333,7 +331,7 @@ router.get("/canceled/list", isAuthenticated, async (req, res) => {
   await Reception.find({})
     .then((rec) => {
       rs = rec.filter((r) => {
-        return r.status == Status.canceled;
+        return r.status === Status.canceled;
       });
     })
     .catch(() => {
@@ -353,7 +351,7 @@ router.get("/rejected/list", isAuthenticated, async (req, res) => {
   await Reception.find({})
     .then((rec) => {
       rs = rec.filter((r) => {
-        return r.status == Status.rejected;
+        return r.status === Status.rejected;
       });
     })
     .catch(() => {
@@ -371,11 +369,11 @@ router.get("/delayed/list", isAuthenticated, async (req, res) => {
   let delayedReceptions = [];
   let receptions = [];
   await Reception.find({})
-    .then((receptions) => {
-      delayedReceptions = receptions.filter((r) => {
+    .then((rs) => {
+      delayedReceptions = rs.filter((r) => {
         return (
-          elaspedDays(r.reception_id) > config.DELAY_CRITERIA &&
-          r.status == Status.doing
+          elaspedDays(r.receptionId) > config.DELAY_CRITERIA &&
+          r.status === Status.doing
         );
       });
     })
@@ -407,7 +405,7 @@ router.get("/reception/report/:id", isAuthenticated, async (req, res) => {
       },
       (receptions, done) => {
         const reception = receptions[0];
-        Log.find({ reception_id: receptions[0].reception_id })
+        Log.find({ receptionId: receptions[0].receptionId })
           .then((logs) => {
             const logsWithJalaliDate = logs.map((log) =>
               addJalaliDateToLog(log)
@@ -455,7 +453,7 @@ router.get("/customer/edit/:id", (req, res) => {
   Customer.findOne({ _id: req.params.id })
     .then((customer) => {
       if (!customer) {
-        req.flash("error", deserializeError(err).message);
+        req.flash("error", "مشنری پیدا نشد");
         return res.redirect("/customer/list");
       }
       return res.render("customer-edit", { name: req.user.name, customer });
@@ -487,6 +485,7 @@ router.post("/register", (req, res) => {
       req.flash("error", serializeError(err).message);
       return res.redirect("/register");
     });
+  return 0;
 });
 router.post(
   "/login",
@@ -512,19 +511,19 @@ router.post("/forget", (req, res) => {
           done(null, token, tokenExpire);
         },
         (token, tokenExpire, done) => {
-          user.token = token;
-          user.tokenExpireDate = tokenExpire;
+          Object.assign(user, { token });
+          Object.assign(user, { tokenExpire });
           user
             .save()
             .then(() => {
-              done(null, user, token);
+              done(null, user.email, token);
             })
             .catch((err) => {
               req.flash("error", deserializeError(err).message);
               return res.redirect("/forget");
             });
         },
-        (user, token, done) => {
+        (email, token, done) => {
           const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -535,7 +534,7 @@ router.post("/forget", (req, res) => {
 
           const mailOptions = {
             from: "Peyman Khalili",
-            to: user.email,
+            to: email,
             subject: "Recovery",
             text: `با سلام. برای بازیابی کلمه عبور خود روی لینک زیر کلیک کنید\n\n http://localhost:5000/reset/${token}`,
           };
@@ -550,8 +549,10 @@ router.post("/forget", (req, res) => {
               req.flash("error", deserializeError(err).message);
               return res.redirect("/forget");
             });
+          done();
         },
       ]);
+      return 0;
     })
     .catch((err) => {
       req.flash("error", serializeError(err).message);
@@ -573,10 +574,10 @@ router.post("/reset/:token", (req, res) => {
       const pass = req.body.password;
       user
         .setPassword(pass)
-        .then((user) => {
-          user.token = undefined;
-          user.tokenExpireDate = undefined;
-          user
+        .then((sameUser) => {
+          Object.assign(sameUser, { token: undefined });
+          Object.assign(sameUser, { tokenExpireDate: undefined });
+          sameUser
             .save()
             .then(() => {
               req.flash("success", "پسورد با موفقیت تغییر یافت");
@@ -591,6 +592,7 @@ router.post("/reset/:token", (req, res) => {
           req.flash("error", serializeError(err).message);
           return res.redirect(`/reset/${token}`);
         });
+      return 0;
     })
     .catch((err) => {
       req.flash("error", serializeError(err).message);
@@ -613,6 +615,7 @@ router.post("/changePassword", isAuthenticated, (req, res) => {
       req.flash("error", " پسورد فعلی اشتباه است");
       res.redirect("/changepassword");
     });
+  return 0;
 });
 router.post("/ajax", isAuthenticated, (_req, res) => {
   Customer.find({}).then((customers) => {
@@ -720,7 +723,7 @@ router.post("/reception/new", isAuthenticated, async (req, res) => {
   // let modificationDate = date.now();
   // req.body data but eo checkboxs
   const formData = {
-    reception_id: Date.now(),
+    receptionId: Date.now(),
     status: Status.doing,
     customerPhoneNumber,
     comments,
@@ -766,17 +769,17 @@ router.post("/reception/new", isAuthenticated, async (req, res) => {
           .then(() => {
             req.flash("success", "پذیرش با موفقیت انجام شد");
             res.redirect("/reception/new");
-            done(null, formData.reception_id);
+            done(null, formData.receptionId);
           })
           .catch((err) => {
             done(err);
           });
       },
-      (reception_id, done) => {
+      (receptionId, done) => {
         Log.create({
           receptionNewStatus: Status.doing,
           operationType: Operation.create,
-          reception_id,
+          receptionId,
           username: req.user.username,
           log_id: Date.now(),
         })
@@ -786,14 +789,12 @@ router.post("/reception/new", isAuthenticated, async (req, res) => {
           });
       },
     ],
-    (err) => {
-      console.log(err);
-    }
+    () => {}
   );
 });
 router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
   const { status } = req.body;
-  const { reception_id } = req.body;
+  const { receptionId } = req.body;
   const { customerPhoneNumber } = req.body;
   const { comments } = req.body;
   const { vehicleName } = req.body;
@@ -879,25 +880,22 @@ router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
           .then(() => {
             req.flash("success", "ویرایش با موفقیت انجام شد");
             res.redirect(`/reception/edit/${req.params.id}`);
-            done(null, reception_id);
+            done(null, receptionId);
           })
           .catch((err) => {
-            req.flash("error", deserializeError(err).message);
-            res.redirect(`/reception/edit/${req.params.id}`);
             done(err);
           });
       },
-      (reception_id, done) => {
+      (recId, done) => {
         Log.create({
           receptionNewStatus: status,
           operationType: Operation.modify,
-          reception_id: Number(reception_id),
+          receptionId: Number(recId),
           username: req.user.username,
           log_id: Date.now(),
         })
           .then(() => {})
           .catch((err) => {
-            console.log(err);
             done(err);
           });
       },
@@ -913,26 +911,24 @@ router.post("/reception/remove/:id", isAuthenticated, (req, res) => {
     [
       (done) => {
         Reception.findOne({ _id: req.params.id }).then((reception) => {
-          return done(null, reception.reception_id);
+          return done(null, reception.receptionId);
         });
       },
-      (reception_id, done) => {
+      (receptionId, done) => {
         Reception.findOneAndDelete({ _id: req.params.id })
           .then(() => {
             req.flash("success", "با موفقیت حذف گردید");
             res.redirect("/reception/list");
-            done(null, reception_id);
+            done(null, receptionId);
           })
           .catch((err) => {
-            req.flash("error", deserializeError(err).message);
-            res.redirect("/reception/list");
             done(err);
           });
       },
-      (reception_id, done) => {
+      (receptionId, done) => {
         Log.create({
           operationType: Operation.remove,
-          reception_id,
+          receptionId,
           username: req.user.username,
           log_id: Date.now(),
         })
@@ -943,7 +939,8 @@ router.post("/reception/remove/:id", isAuthenticated, (req, res) => {
       },
     ],
     (err) => {
-      console.log(err);
+      req.flash("error", deserializeError(err).message);
+      res.redirect("/reception/list");
     }
   );
 });
@@ -964,28 +961,27 @@ router.post("/reception/success/:id", isAuthenticated, (req, res) => {
             done(null);
           })
           .catch((err) => {
-            req.flash("error", deserializeError(err).message);
-            res.redirect("/reception/list");
             done(err);
           });
       },
       (done) => {
         Reception.findOne({ _id: req.params.id }).then((reception) => {
-          return done(null, reception.reception_id);
+          return done(null, reception.receptionId);
         });
       },
-      (reception_id, done) => {
+      (receptionId, done) => {
         Log.create({
           comment: successComment,
           payment: finalPayment,
           receptionNewStatus: Status.succeded,
           operationType: Operation.changeStatus,
-          reception_id,
+          receptionId,
           username: req.user.username,
           log_id: Date.now(),
         })
           .then(() => {})
           .catch(() => {});
+        done();
       },
     ],
     (err) => {
@@ -1024,10 +1020,11 @@ router.post("/reception/cancel/:id", isAuthenticated, (req, res) => {
         payment: cancelPayment,
         receptionNewStatus: status,
         operationType: Operation.changeStatus,
-        reception_id: req.body.reception_id,
+        receptionId: req.body.receptionId,
         username: req.user.username,
         log_id: Date.now(),
       });
+      done();
     },
   ]);
 });
@@ -1061,10 +1058,11 @@ router.post("/reception/reject/:id", isAuthenticated, (req, res) => {
         payment: rejectPayment,
         receptionNewStatus: status,
         operationType: Operation.changeStatus,
-        reception_id: req.body.reception_id,
+        receptionId: req.body.receptionId,
         username: req.user.username,
         log_id: Date.now(),
       });
+      done();
     },
   ]);
 });
@@ -1097,15 +1095,15 @@ router.post("/reception/toDoing/:id", isAuthenticated, (req, res) => {
         comment: req.body.toDoingComment,
         receptionNewStatus: Status.doing,
         operationType: Operation.changeStatus,
-        reception_id: reception.reception_id,
+        receptionId: reception.receptionId,
         username: req.user.username,
         log_id: Date.now(),
       });
+      done();
     },
   ]);
 });
 router.post("/customer/edit/:id", (req, res) => {
-  console.log(req.params.id);
   Customer.findOneAndUpdate(
     { _id: req.params.id },
     {
@@ -1134,6 +1132,7 @@ router.post("/customer/remove/:id", async (req, res) => {
             req.flash("error", "برای این مشتری پذیرش ثبت شده است");
             return res.redirect("/customer/list");
           }
+          return 0;
         })
         .catch((err) => {
           ended = true;
@@ -1141,7 +1140,7 @@ router.post("/customer/remove/:id", async (req, res) => {
           return res.redirect("/customer/list");
         });
     })
-    .catch((err) => {});
+    .catch(() => {});
   if (ended) {
     return;
   }

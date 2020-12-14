@@ -10,7 +10,7 @@ const Status = {
 };
 
 const receptionSchema = new mongoose.Schema({
-  reception_id: { type: Number, required: true },
+  receptionId: { type: Number, required: true },
   status: { type: String, required: true },
   customerPhoneNumber: { type: String, required: true },
   comments: { type: String, required: true },
