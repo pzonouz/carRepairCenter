@@ -878,9 +878,9 @@ router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
       (done) => {
         Reception.findOneAndUpdate({ _id: req.params.id }, formData)
           .then(() => {
-            req.flash("success", "ویرایش با موفقیت انجام شد");
-            res.redirect(`/reception/edit/${req.params.id}`);
             done(null, receptionId);
+            req.flash("success", "ویرایش با موفقیت انجام شد");
+            return res.redirect(`/reception/edit/${req.params.id}`);
           })
           .catch((err) => {
             done(err);
@@ -901,8 +901,9 @@ router.post("/reception/edit/:id", isAuthenticated, async (req, res) => {
       },
     ],
     (err) => {
+      console.log(err);
       req.flash("error", deserializeError(err).message);
-      res.redirect(`/reception/edit/${req.params.id}`);
+      return res.redirect(`/reception/edit/${req.params.id}`);
     }
   );
 });
