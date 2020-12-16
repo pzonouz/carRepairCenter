@@ -117,11 +117,11 @@ const isSaved = (req, res, next) => {
  * !GETs
  */
 router.get("/cool", (_req, res) => {
-  res.send(cool());
+  return res.send(cool());
 });
 router.get("/", (_req, res) => {
   // debugger;
-  res.render("index");
+  return res.render("index");
 });
 router.get("/dashboard", isAuthenticated, async (req, res) => {
   let totalReceptions = 0;
@@ -169,7 +169,7 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
   await Customer.find({}).then((customers) => {
     customerCount = customers.length;
   });
-  res.render("dashboard", {
+  return res.render("dashboard", {
     name: req.user.name,
     totalReceptions,
     todayTotalReceptions,
@@ -183,18 +183,18 @@ router.get("/dashboard", isAuthenticated, async (req, res) => {
   });
 });
 router.get("/login", isSaved, (_req, res) => {
-  res.render("login");
+  return res.render("login");
 });
 router.get("/register", (_req, res) => {
-  res.render("register");
+  return res.render("register");
 });
 router.get("/logout", isAuthenticated, (req, res) => {
   req.logOut();
   req.flash("success", "با موفقیت خارج شدید");
-  res.redirect("/login");
+  return res.redirect("/login");
 });
 router.get("/forget", (_req, res) => {
-  res.render("forget");
+  return res.render("forget");
 });
 router.get("/reset/:token", (req, res) => {
   const { token } = req.params;
@@ -212,13 +212,13 @@ router.get("/reset/:token", (req, res) => {
     });
 });
 router.get("/changePassword", isAuthenticated, (req, res) => {
-  res.render("changePassword", { name: req.user.name });
+  return res.render("changePassword", { name: req.user.name });
 });
 router.get("/customer/new", isAuthenticated, (req, res) => {
-  res.render("customer-new", { name: req.user.name });
+  return res.render("customer-new", { name: req.user.name });
 });
 router.get("/reception/new", isAuthenticated, (req, res) => {
-  res.render("reception-new", { name: req.user.name });
+  return res.render("reception-new", { name: req.user.name });
 });
 router.get("/reception/list", isAuthenticated, async (req, res) => {
   let receptions = [];
@@ -410,7 +410,7 @@ router.get("/reception/report/:id", isAuthenticated, async (req, res) => {
             const logsWithJalaliDate = logs.map((log) =>
               addJalaliDateToLog(log)
             );
-            res.render("reception-report", {
+            return res.render("reception-report", {
               name: req.user.name,
               logsWithJalaliDate,
               addJalaliDateToLog,
@@ -425,28 +425,31 @@ router.get("/reception/report/:id", isAuthenticated, async (req, res) => {
     ],
     (err) => {
       req.flash("error", deserializeError(err).message);
-      res.redirect("/reception/list");
+      return res.redirect("/reception/list");
     }
   );
 });
 router.get("/reception/toDoing/:id", isAuthenticated, async (req, res) => {
   await Reception.findOne({ _id: req.params.id })
     .then((reception) => {
-      res.render("reception-toDoing", { reception, name: req.user.name });
+      return res.render("reception-toDoing", {
+        reception,
+        name: req.user.name,
+      });
     })
     .catch((err) => {
       req.flash("error", deserializeError(err).message);
-      res.redirect("/reception-list", { name: req.user.name });
+      return res.redirect("/reception-list", { name: req.user.name });
     });
 });
 router.get("/customer/list", (req, res) => {
   Customer.find({})
     .then((customers) => {
-      res.render("customer-list", { name: req.user.name, customers });
+      return res.render("customer-list", { name: req.user.name, customers });
     })
     .catch((err) => {
       req.flash("error", deserializeError(err).message);
-      res.redirect("/dashboard");
+      return res.redirect("/dashboard");
     });
 });
 router.get("/customer/edit/:id", (req, res) => {
@@ -460,7 +463,7 @@ router.get("/customer/edit/:id", (req, res) => {
     })
     .catch((err) => {
       req.flash("error", deserializeError(err).message);
-      res.redirect("/customer/list");
+      return res.redirect("/customer/list");
     });
 });
 /**---------------------------------------------------------
@@ -543,13 +546,13 @@ router.post("/forget", (req, res) => {
             .sendMail(mailOptions)
             .then(() => {
               req.flash("success", "ایمیل ارسال شد");
-              res.redirect("/forget");
+              return res.redirect("/forget");
             })
             .catch((err) => {
               req.flash("error", deserializeError(err).message);
               return res.redirect("/forget");
             });
-          done();
+          // done();
         },
       ]);
       return 0;
@@ -609,17 +612,17 @@ router.post("/changePassword", isAuthenticated, (req, res) => {
     .then(() => {
       req.flash("success", "پسورد با موفقیت تغییر یافت");
       req.logOut();
-      res.redirect("/login");
+      return res.redirect("/login");
     })
     .catch(() => {
       req.flash("error", " پسورد فعلی اشتباه است");
-      res.redirect("/changepassword");
+      return res.redirect("/changepassword");
     });
   return 0;
 });
 router.post("/ajax", isAuthenticated, (_req, res) => {
   Customer.find({}).then((customers) => {
-    res.send(customers);
+    return res.send(customers);
   });
 });
 router.post("/customer/new", isAuthenticated, async (req, res) => {
@@ -628,9 +631,9 @@ router.post("/customer/new", isAuthenticated, async (req, res) => {
     phoneNumber: req.body.phoneNumber,
   }).then((customer) => {
     if (customer) {
-      req.flash("error", "این شماره موبایل قبلا ثبت شده است");
-      res.redirect("/customer/new");
       duplicatedPhoneNumber = true;
+      req.flash("error", "این شماره موبایل قبلا ثبت شده است");
+      return res.redirect("/customer/new");
     }
   });
   if (!duplicatedPhoneNumber) {
@@ -650,16 +653,15 @@ router.post("/customer/new", isAuthenticated, async (req, res) => {
   }
 });
 router.post("/customer/new/ajax", isAuthenticated, async (req, res) => {
-  let duplicatedPhoneNumber = false;
+  const duplicatedPhoneNumber = false;
   await Customer.findOne({
     phoneNumber: req.body.phoneNumber,
   }).then((customer) => {
     if (customer) {
-      res.send({
+      return res.send({
         status: "error",
         msg: "شماره موبایل قبلا ثبت شده است",
       });
-      duplicatedPhoneNumber = true;
     }
   });
   if (!duplicatedPhoneNumber) {
@@ -767,9 +769,9 @@ router.post("/reception/new", isAuthenticated, async (req, res) => {
       (done) => {
         Reception.create(formData)
           .then(() => {
-            req.flash("success", "پذیرش با موفقیت انجام شد");
-            res.redirect("/reception/new");
             done(null, formData.receptionId);
+            req.flash("success", "پذیرش با موفقیت انجام شد");
+            return res.redirect("/reception/new");
           })
           .catch((err) => {
             done(err);
@@ -918,9 +920,9 @@ router.post("/reception/remove/:id", isAuthenticated, (req, res) => {
       (receptionId, done) => {
         Reception.findOneAndDelete({ _id: req.params.id })
           .then(() => {
-            req.flash("success", "با موفقیت حذف گردید");
-            res.redirect("/reception/list");
             done(null, receptionId);
+            req.flash("success", "با موفقیت حذف گردید");
+            return res.redirect("/reception/list");
           })
           .catch((err) => {
             done(err);
@@ -941,7 +943,7 @@ router.post("/reception/remove/:id", isAuthenticated, (req, res) => {
     ],
     (err) => {
       req.flash("error", deserializeError(err).message);
-      res.redirect("/reception/list");
+      return res.redirect("/reception/list");
     }
   );
 });
@@ -957,9 +959,9 @@ router.post("/reception/success/:id", isAuthenticated, (req, res) => {
           { status, successComment, finalPayment }
         )
           .then(() => {
-            req.flash("success", "با موفقیت انجام شد");
-            res.redirect("/succeded/list");
             done(null);
+            req.flash("success", "با موفقیت انجام شد");
+            return res.redirect("/succeded/list");
           })
           .catch((err) => {
             done(err);
@@ -982,12 +984,12 @@ router.post("/reception/success/:id", isAuthenticated, (req, res) => {
         })
           .then(() => {})
           .catch(() => {});
-        done();
+        // done();
       },
     ],
     (err) => {
       req.flash("error", deserializeError(err).message);
-      res.redirect(`/reception/edit/${req.params.id}`);
+      return res.redirect(`/reception/edit/${req.params.id}`);
     }
   );
 });
@@ -1025,7 +1027,7 @@ router.post("/reception/cancel/:id", isAuthenticated, (req, res) => {
         username: req.user.username,
         log_id: Date.now(),
       });
-      done();
+      // done();
     },
   ]);
 });
@@ -1063,7 +1065,7 @@ router.post("/reception/reject/:id", isAuthenticated, (req, res) => {
         username: req.user.username,
         log_id: Date.now(),
       });
-      done();
+      // done();
     },
   ]);
 });
@@ -1100,7 +1102,7 @@ router.post("/reception/toDoing/:id", isAuthenticated, (req, res) => {
         username: req.user.username,
         log_id: Date.now(),
       });
-      done();
+      // done();
     },
   ]);
 });
@@ -1148,11 +1150,11 @@ router.post("/customer/remove/:id", async (req, res) => {
   await Customer.findOneAndDelete({ _id: req.params.id })
     .then(() => {
       req.flash("success", "با موفقیت انجام شد");
-      res.redirect("/customer/list");
+      return res.redirect("/customer/list");
     })
     .catch((err) => {
       req.flash("error", deserializeError(err).message);
-      res.redirect("/customer/list");
+      return res.redirect("/customer/list");
     });
 });
 
