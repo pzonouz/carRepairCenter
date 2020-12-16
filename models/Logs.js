@@ -11,7 +11,7 @@ const logSchema = new mongoose.Schema({
   payment: { type: Number },
   receptionNewStatus: { type: String },
   operationType: { type: String, required: true },
-  reception_id: { type: Number, required: true },
+  receptionId: { type: Number, required: true },
   username: { type: String, required: true },
   log_id: { type: Number, required: true, unique: true, index: true },
 });
